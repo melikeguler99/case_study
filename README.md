@@ -1,24 +1,33 @@
-# NanoPipe (Nextflow) — NanoQC + NanoPlot for FASTQ
+# NanoPipe – Nextflow Pipeline for NanoQC & NanoPlot
 
-A small, reproducible Nextflow DSL2 pipeline to run **NanoQC** and **NanoPlot** on FASTQ files (e.g., Oxford Nanopore reads).
+NanoPipe is a small, reproducible **Nextflow (DSL2)** pipeline designed to perform **basic quality control and visualization** of FASTQ files, particularly suited for **Oxford Nanopore sequencing data**.
 
-## Requirements
-- Java (>= 11 recommended)
-- Nextflow
-- Conda (Miniconda/Anaconda) or Mamba (optional)
+The pipeline runs:
+- **NanoQC** – HTML-based quality summary
+- **NanoPlot** – read length, quality, and yield visualizations
 
-## Input
-Put FASTQ/FASTQ.GZ files into:
-- `data/`  (matched by `data/*.fastq*`)
+All dependencies are handled via **Conda**, making the pipeline portable and easy to reproduce on different machines.
 
-## Run
-```bash
-./nextflow run chat.nf -with-conda
-./nextflow run chat.nf -with-conda -resume
-open data/results/*/nanoqc/*NanoQC*.html
-open data/results/*/nanoplot/NanoPlot-report.html
+---
 
-Then add it:
+## ✨ Features
 
-```bash
-git add README.md
+- Fully reproducible workflow using **Nextflow + Conda**
+- Automatic sample detection from FASTQ filenames
+- Per-sample output organization
+- Works with `.fastq` and `.fastq.gz`
+- No hard-coded paths
+- Suitable for local execution and teaching / case studies
+
+---
+
+## 📂 Project Structure
+
+```text
+.
+├── chat.nf             # Main Nextflow pipeline (DSL2)
+├── nextflow.config     # Default parameters and conda configuration
+├── env.yml             # Conda environment definition
+├── README.md           # Documentation
+├── .gitignore
+└── data/               # (not tracked) input FASTQ files
