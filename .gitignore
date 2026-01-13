@@ -1,0 +1,23 @@
+# Nextflow
+work/
+.nextflow*
+trace.*
+timeline.*
+report.*
+
+# Outputs / data
+data/
+results/
+*.fastq
+*.fastq.gz
+*.fq
+*.fq.gz
+
+# Conda / envs
+.env/
+.conda/
+conda/
+__pycache__/
+
+# macOS
+.DS_Store
