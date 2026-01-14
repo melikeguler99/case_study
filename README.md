@@ -28,7 +28,7 @@ All dependencies are handled via **Conda**, making the pipeline portable and eas
 
 ---
 
-## 🧰 Requirements
+## Requirements
 
 ### Software
 
