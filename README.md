@@ -115,18 +115,17 @@ data/results/<sample>/
     ├── *.png
     └── *.log
 ```
-
 ---
 
 ### Output Description
 
-NanoQC report
+* NanoQC report
 An interactive HTML summary of read quality metrics.
 
-NanoPlot report
+* NanoPlot report
 A comprehensive visualization suite including read length distributions, quality vs length plots, and yield statistics.
 
-PNG files
+* PNG files
 High-resolution static plots suitable for reports and presentations.
 
 ---
