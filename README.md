@@ -22,6 +22,29 @@ All dependencies are handled via **Conda**, making the pipeline portable and eas
 - Suitable for local execution and teaching / case studies
 
 ---
+## Software Requirements
+
+Java Development Kit (JDK) ≥ 11
+Required by Nextflow for workflow execution.
+
+Nextflow
+Workflow orchestration and execution engine.
+
+Conda (Miniconda or Anaconda)
+Used to create an isolated environment for all bioinformatics tools.
+
+Optional (recommended):
+Mamba may be used as a drop-in replacement for Conda to significantly speed up environment resolution.
+
+Version Check
+
+Users can verify their environment with:
+
+```text
+java -version
+nextflow -version
+conda --version
+---
 
 ## 📂 Project Structure
 
