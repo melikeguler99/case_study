@@ -217,6 +217,7 @@ The results are saved in a CSV file.
 python fastq_stats.py \
   --input data/sample.fastq.gz \
   --output sample_read_stats.csv
+```
 **Output example:**
 - `SampleID`
 - `ReadLength`
@@ -233,7 +234,7 @@ The second script uses the output file from Part 1 and generates distribution pl
 2. Read Length  
 3. Mean Read Quality Score  
 
-In addition, basic summary statistics (e.g., mean and median) are calculated and printed.
+In addition, basic summary statistics (e.g., mean	median	std	min	max) are calculated and printed.
 
 These scripts can be used independently for exploratory analysis or as a preliminary step before more advanced quality control.
 ```bash
