@@ -216,7 +216,7 @@ Run the script on a single FASTQ file:
 
 ```bash
 python custom_script.py \
-  --input path/to/sample.fastq.gz \
+  --input path/to/sample_id.fastq.gz \
   --outdir results
 ```
 The output file will be automatically named using the input filename (e.g.,barcode77.fastq.gz → barcode77_stats.csv) and saved in the specified output directory.
