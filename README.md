@@ -46,6 +46,7 @@ To run NanoPipe, the following are required:
 java -version
 nextflow -version
 conda --version
+```
 
 ###  Input Data
 
