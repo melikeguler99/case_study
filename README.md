@@ -22,25 +22,29 @@ All dependencies are handled via **Conda**, making the pipeline portable and eas
 - Suitable for local execution and teaching / case studies
 
 ---
-## Software Requirements
+- Compatible with macOS and Linux
 
-Java Development Kit (JDK) ≥ 11
-Required by Nextflow for workflow execution.
+---
 
-Nextflow
-Workflow orchestration and execution engine.
+## 🧰 Requirements
 
-Conda (Miniconda or Anaconda)
-Used to create an isolated environment for all bioinformatics tools.
+### Software
 
-Optional (recommended):
-Mamba may be used as a drop-in replacement for Conda to significantly speed up environment resolution.
+To run NanoPipe, the following are required:
 
-Version Check
+- **Java (JDK ≥ 11)**  
+  Required by Nextflow.
+- **Nextflow**  
+  Workflow execution engine.
+- **Conda** (Miniconda or Anaconda)  
+  Used to manage tool dependencies.
 
-Users can verify their environment with:
+> **Optional but recommended:**  
+> **Mamba** can be used as a faster alternative to Conda for environment resolution.
 
-```text
+### Version Check
+
+```bash
 java -version
 nextflow -version
 conda --version
