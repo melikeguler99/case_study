@@ -216,7 +216,7 @@ This script reads a FASTQ file and computes GC content, read length, and mean re
 The results are saved in a CSV file.
 
 ```bash
-python fastq_stats.py \
+python custom_script.py \
   --input data/sample.fastq.gz \
   --output sample_read_stats.csv
 ```
@@ -236,7 +236,7 @@ In addition, basic summary statistics (e.g., mean	median	std	min	max) are calcul
 These scripts can be used independently for exploratory analysis or as a preliminary step before more advanced quality control.
 
 ```bash
-python visualize_stats.py \
+python custom_script_vis.py \
   --input sample_read_stats.csv \
   --outdir figures/
 ```
