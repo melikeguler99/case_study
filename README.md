@@ -165,3 +165,81 @@ Users may override these parameters at runtime:
 This design ensures portability across different projects and file systems.
 
 ---
+
+## Custom QC Analysis for long reads 
+
+This repository includes two simple Python scripts for basic quality analysis of FASTQ files.  
+They are designed for users who want a **transparent, script-based workflow** without relying on advanced QC tools.
+
+## Requirements for the Python Scripts
+
+To run the custom FASTQ analysis scripts, the following are required:
+
+- **Python 3.8 or newer**
+- **Required Python libraries:**
+  - `numpy`
+  - `pandas`
+  - `matplotlib`
+
+These libraries are used for numerical calculations, data handling, and plotting.
+
+---
+
+### Optional (Recommended)
+
+- **gzip support** (built into Python) for reading `.fastq.gz` files
+- A UNIX-like environment (Linux or macOS) for easier command-line usage
+
+---
+
+### Check Installation
+
+```bash
+python --version
+python -c "import numpy, pandas, matplotlib"
+```
+---
+
+###  Read-Level Statistics
+
+The first script processes a FASTQ file and calculates the following **for each individual read**:
+
+- GC content percentage  
+- Read length  
+- Mean read quality score  
+
+The results are saved in a structured format (CSV or TXT) for downstream analysis.
+
+This script reads a FASTQ file and computes GC content, read length, and mean read quality score **for each read**.  
+The results are saved in a CSV file.
+
+```bash
+python fastq_stats.py \
+  --input data/sample.fastq.gz \
+  --output sample_read_stats.csv
+**Output example:**
+- `SampleID`
+- `ReadLength`
+- `QualityScore`
+- `GC`
+```
+---
+
+###  Data Visualization
+
+The second script uses the output file from Part 1 and generates distribution plots for:
+
+1. GC Content  
+2. Read Length  
+3. Mean Read Quality Score  
+
+In addition, basic summary statistics (e.g., mean and median) are calculated and printed.
+
+These scripts can be used independently for exploratory analysis or as a preliminary step before more advanced quality control.
+```bash
+python visualize_stats.py \
+  --input sample_read_stats.csv \
+  --outdir figures/
+
+```
+----
