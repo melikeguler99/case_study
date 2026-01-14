@@ -47,8 +47,7 @@ java -version
 nextflow -version
 conda --version
 
----
-📥 Input Data
+###  Input Data
 
 The pipeline processes single-end FASTQ files, including both uncompressed and gzip-compressed formats.
 
@@ -78,7 +77,7 @@ sample_A.fastq	sample_A
 
 This allows the pipeline to scale seamlessly to multiple samples without manual configuration.
 
-🚀 Running the Pipeline
+###  Running the Pipeline
 
 The pipeline is executed locally using Nextflow.
 
@@ -97,7 +96,7 @@ On the first run, Nextflow will create a Conda environment based on env.yml.
 This may take several minutes depending on network speed and solver configuration.
 The environment is cached and reused for subsequent runs.
 
-📤 Output Structure
+###  Output Structure
 
 All results are organized per sample, ensuring clarity and traceability.
 
@@ -109,7 +108,7 @@ data/results/<sample>/
     ├── *.png
     └── *.log
 
-Output Description
+### Output Description
 
 NanoQC report
 An interactive HTML summary of read quality metrics.
@@ -120,7 +119,7 @@ A comprehensive visualization suite including read length distributions, quality
 PNG files
 High-resolution static plots suitable for reports and presentations.
 
-🌐 Viewing Results
+###  Viewing Results
 
 On macOS systems, reports can be opened directly from the terminal:
 
@@ -130,7 +129,7 @@ open data/results/*/nanoplot/NanoPlot-report.html
 
 Users on other operating systems may open the HTML files in any modern web browser.
 
-⚙️ Configuration and Customization
+###  Configuration and Customization
 
 Default parameters are defined in nextflow.config:
 
@@ -149,7 +148,7 @@ Users may override these parameters at runtime:
 
 This design ensures portability across different projects and file systems.
 
-🔁 Reproducibility and Portability
+###  Reproducibility and Portability
 
 This pipeline adheres to modern reproducible research practices:
 
@@ -163,7 +162,7 @@ The -resume option enables exact reuse of prior computations
 
 As a result, the same inputs will produce consistent outputs across different systems.
 
-🧪 Intended Use
+###  Intended Use
 
 This pipeline is intended for:
 
@@ -177,14 +176,4 @@ Teaching reproducible workflow design using Nextflow and Conda
 
 Preliminary data exploration prior to downstream analysis
 
-It is not intended to replace large-scale production QC pipelines, but rather to serve as a clear, reproducible, and extensible foundation.
-## 📂 Project Structure
 
-```text
-.
-├── chat.nf             # Main Nextflow pipeline (DSL2)
-├── nextflow.config     # Default parameters and conda configuration
-├── env.yml             # Conda environment definition
-├── README.md           # Documentation
-├── .gitignore
-└── data/               # (not tracked) input FASTQ files
