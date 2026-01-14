@@ -156,7 +156,7 @@ params {
 ```
 Users may override these parameters at runtime:
 ```bash
-./nextflow run chat.nf -with-conda \
+./nextflow run qcpipe.nf -with-conda \
   --fastq_dir /path/to/fastq_files \
   --out_dir /path/to/output_directory
 ```
