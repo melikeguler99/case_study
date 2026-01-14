@@ -88,7 +88,7 @@ The pipeline is executed locally using Nextflow.
 
 ## Standard Execution
 ```bash
-./nextflow run chat.nf -with-conda
+./nextflow run qcpipe.nf -with-conda
 ```
 
 ## Resume Execution
@@ -96,7 +96,7 @@ The pipeline is executed locally using Nextflow.
 To reuse previously completed steps (recommended during development or re-analysis):
 
 ```bash
-./nextflow run chat.nf -with-conda -resume
+./nextflow run qcpipe.nf -with-conda -resume
 ```
 
 ## First-Run Behavior
