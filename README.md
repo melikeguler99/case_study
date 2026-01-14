@@ -166,9 +166,9 @@ This design ensures portability across different projects and file systems.
 
 ---
 
-## Custom QC Analysis for long reads 
+### Custom QC Analysis for long reads 
 
-This repository includes two simple Python scripts for basic quality analysis of FASTQ files.  
+This repository includes two simple Python scripts for basic quality analysis of FASTQ files in the 'case_study/custom_python_scripts/.'
 They are designed for users who want a **transparent, script-based workflow** without relying on advanced QC tools.
 
 ## Requirements for the Python Scripts
@@ -202,7 +202,7 @@ python -c "import numpy, pandas, matplotlib"
 
 ###  Read-Level Statistics
 
-The first script processes a FASTQ file and calculates the following **for each individual read**:
+The first script ('custom_script.py') processes a FASTQ file and calculates the following **for each individual read**:
 
 - GC content percentage  
 - Read length  
@@ -223,24 +223,23 @@ python fastq_stats.py \
 - `ReadLength`
 - `QualityScore`
 - `GC`
-```
 ---
 
 ###  Data Visualization
 
-The second script uses the output file from Part 1 and generates distribution plots for:
+The second script ('custom_script_vis.py') uses the output file from first file and generates distribution plots for:
 
 1. GC Content  
 2. Read Length  
 3. Mean Read Quality Score  
 
-In addition, basic summary statistics (e.g., mean	median	std	min	max) are calculated and printed.
+In addition, basic summary statistics (e.g., mean	median	std	min	max) are calculated as '.csv file'.
 
 These scripts can be used independently for exploratory analysis or as a preliminary step before more advanced quality control.
+
 ```bash
 python visualize_stats.py \
   --input sample_read_stats.csv \
   --outdir figures/
-
 ```
 ----
