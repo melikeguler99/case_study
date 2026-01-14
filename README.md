@@ -111,9 +111,9 @@ The environment is cached and reused for subsequent runs.
 
 All results are organized per sample, ensuring clarity and traceability.
 ```bash
-data/results/<sample>/
+data/results/<sample_id>/
 ├── nanoqc/
-│   └── <sample>_NanoQC.html
+│   └── <sample_id>_NanoQC.html
 └── nanoplot/
     ├── NanoPlot-report.html
     ├── *.png
@@ -239,11 +239,11 @@ The second script (`custom_script_vis.py`) uses the output file from first pytho
 
 ```bash
 python custom_script_vis.py \
-  --input results/sample_stats.csv \
+  --input results/sample_id_stats.csv \
   --outdir figures
 ```
 Output:
 ```bash
-figures/sample_histograms.png
+figures/sample_id_histograms.png
 ```
 ----
