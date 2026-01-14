@@ -47,6 +47,7 @@ java -version
 nextflow -version
 conda --version
 ```
+---
 
 ###  Input Data
 
@@ -67,6 +68,7 @@ By default, the pipeline searches for:
 ```bash
 data/*.fastq*
 ```
+---
 
 Sample Identification
 
@@ -80,6 +82,7 @@ sample_A.fastq	sample_A
 ```
 
 This allows the pipeline to scale seamlessly to multiple samples without manual configuration.
+---
 
 ###  Running the Pipeline
 
@@ -101,6 +104,7 @@ First-Run Behavior
 On the first run, Nextflow will create a Conda environment based on env.yml.
 This may take several minutes depending on network speed and solver configuration.
 The environment is cached and reused for subsequent runs.
+---
 
 ###  Output Structure
 
@@ -114,6 +118,9 @@ data/results/<sample>/
     ├── *.png
     └── *.log
 ```
+
+---
+
 ### Output Description
 
 NanoQC report
@@ -124,6 +131,8 @@ A comprehensive visualization suite including read length distributions, quality
 
 PNG files
 High-resolution static plots suitable for reports and presentations.
+
+---
 
 ###  Viewing Results
 
@@ -153,6 +162,7 @@ Users may override these parameters at runtime:
 ```
 
 This design ensures portability across different projects and file systems.
+---
 
 ###  Reproducibility and Portability
 
