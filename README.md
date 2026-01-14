@@ -20,8 +20,6 @@ All dependencies are handled via **Conda**, making the pipeline portable and eas
 - Per-sample output organization
 - Works with `.fastq` and `.fastq.gz`
 - Suitable for local execution and teaching / case studies
-
----
 - Compatible with macOS and Linux
 
 ---
@@ -48,6 +46,7 @@ To run NanoPipe, the following are required:
 java -version
 nextflow -version
 conda --version
+
 ---
 📥 Input Data
 
