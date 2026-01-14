@@ -97,9 +97,11 @@ To reuse previously completed steps (recommended during development or re-analys
 
 First-Run Behavior
 
+
 On the first run, Nextflow will create a Conda environment based on env.yml.
 This may take several minutes depending on network speed and solver configuration.
 The environment is cached and reused for subsequent runs.
+
 ---
 
 ###  Output Structure
