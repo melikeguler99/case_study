@@ -84,6 +84,23 @@ This allows the pipeline to scale seamlessly to multiple samples without manual 
 
 ###  Running the Pipeline
 
+First clone this repo
+```bash
+git clone https://github.com/melikeguler99/case_study.git
+cd case_study
+```
+
+Creta your personal data folder
+
+```bash
+mkdir -p data
+
+```
+
+```bash
+cp data_path>
+```
+
 The pipeline is executed locally using Nextflow.
 
 ## Standard Execution
