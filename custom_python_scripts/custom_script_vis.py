@@ -11,9 +11,7 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 
-# -----------------------
-# Argument parsing
-# -----------------------
+
 parser = argparse.ArgumentParser(
     description="Visualize FASTQ read statistics from CSV"
 )
@@ -30,12 +28,8 @@ csv_path = Path(args.input)
 outdir = Path(args.outdir)
 outdir.mkdir(parents=True, exist_ok=True)
 
-# -----------------------
-# Load data
-# -----------------------
 df = pd.read_csv(csv_path)
 
-# Validate + numeric
 for col in ["GC", "ReadLength", "QualityScore"]:
     if col not in df.columns:
         raise ValueError(f"Missing column '{col}'. Found: {list(df.columns)}")
@@ -50,9 +44,6 @@ sample_id = (
 # convert bases -> kb
 df["ReadLength_kb"] = df["ReadLength"] / 1000.0
 
-# -----------------------
-# Helpers
-# -----------------------
 def freedman_diaconis_bins(x: np.ndarray, min_bins=15, max_bins=80) -> int:
     x = x[np.isfinite(x)]
     n = x.size
@@ -113,9 +104,6 @@ def plot_hist(ax, data: pd.Series, title: str, xlabel: str, x_max=None):
     ax.grid(True, alpha=0.25)
     ax.legend(frameon=False)
 
-# -----------------------
-# Summary statistics
-# -----------------------
 stats = pd.concat([
     summarize(df["GC"], "GC Content (%)"),
     summarize(df["ReadLength_kb"], "Read Length (kb)"),
@@ -124,9 +112,6 @@ stats = pd.concat([
 
 print(stats.round(4))
 
-# -----------------------
-# Plotting
-# -----------------------
 fig, axes = plt.subplots(1, 3, figsize=(18, 4.8))
 
 plot_hist(axes[0], df["GC"], "GC content distribution", "GC (%)")
