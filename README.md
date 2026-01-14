@@ -11,6 +11,11 @@ The pipeline runs:
 
 All dependencies are handled via **Conda**, making the pipeline portable and easy to reproduce on different machines.
 
+## Pipeline Workflow
+
+![NanoPipe pipeline architecture](assets/part1.png)
+
+
 ---
 
 ##  Features
