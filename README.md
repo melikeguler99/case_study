@@ -55,9 +55,9 @@ The pipeline processes single-end FASTQ files, including both uncompressed and g
 
 Supported file extensions:
 
-.fastq
+`.fastq`
 
-.fastq.gz
+`.fastq.gz`
 
 Input files must be placed in the directory specified by the parameter:
 
@@ -139,10 +139,10 @@ High-resolution static plots suitable for reports and presentations.
 ###  Viewing Results
 
 On macOS systems, reports can be opened directly from the terminal:
-
+```bash
 open data/results/*/nanoqc/*NanoQC*.html
 open data/results/*/nanoplot/NanoPlot-report.html
-
+```
 
 Users on other operating systems may open the HTML files in any modern web browser.
 
