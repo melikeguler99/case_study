@@ -156,6 +156,6 @@ Users may override these parameters at runtime:
   --fastq_dir /path/to/fastq_files \
   --out_dir /path/to/output_directory
 ```
-
 This design ensures portability across different projects and file systems.
+
 ---
