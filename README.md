@@ -215,7 +215,7 @@ The results are saved in a structured format (CSV) for downstream analysis.
 Run the script on a single FASTQ file:
 
 ```bash
-python custom_py.py \
+python custom_script.py \
   --input path/to/sample.fastq.gz \
   --outdir results
 ```
@@ -224,7 +224,7 @@ The output file will be automatically named using the input filename (e.g.,barco
 To process multiple FASTQ files in a directory:
 ```bash
 for fq in fastqz/*.fastq.gz; do
-  python custom_py.py --input "$fq" --outdir results
+  python custom_script.py --input "$fq" --outdir results
 done
 ```
 **Output example:**
@@ -233,18 +233,17 @@ done
 - `QualityScore`
 - `GC`
 ---
-
 ###  Data Visualization
 
-The second script (`custom_script_vis.py`) uses the output file from first file and generates distribution plots. 
-
-In addition, basic summary statistics (e.g., mean	median	std	min	max) are calculated as `.csv file`.
-
-These scripts can be used independently for exploratory analysis or as a preliminary step before more advanced quality control.
+The second script (`custom_script_vis.py`) uses the output file from first python script and generates distribution plots. 
 
 ```bash
 python custom_script_vis.py \
-  --input sample_read_stats.csv \
-  --outdir figures/
+  --input results/sample_stats.csv \
+  --outdir figures
+```
+Output:
+```bash
+figures/sample_histograms.png
 ```
 ----
