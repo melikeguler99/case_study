@@ -84,13 +84,13 @@ This allows the pipeline to scale seamlessly to multiple samples without manual 
 
 ###  Running the Pipeline
 
-First clone this repo
+- First clone this repo
 ```bash
 git clone https://github.com/melikeguler99/case_study.git
 cd case_study
 ```
 
-Creta your personal data folder
+- Creta your personal data folder
 
 ```bash
 mkdir -p data
@@ -113,7 +113,7 @@ nextflow run qcpipe.nf -with-conda
 To reuse previously completed steps (recommended during development or re-analysis):
 
 ```bash
-./nextflow run qcpipe.nf -with-conda -resume
+nextflow run qcpipe.nf -with-conda -resume
 ```
 
 ## First-Run Behavior
@@ -171,7 +171,7 @@ params {
 ```
 Users may override these parameters at runtime:
 ```bash
-./nextflow run qcpipe.nf -with-conda \
+nextflow run qcpipe.nf -with-conda \
   --fastq_dir /path/to/fastq_files \
   --out_dir /path/to/output_directory
 ```
