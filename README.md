@@ -89,14 +89,16 @@ This allows the pipeline to scale seamlessly to multiple samples without manual 
 The pipeline is executed locally using Nextflow.
 
 Standard Execution
-```bash./nextflow run chat.nf -with-conda
+```bash
+./nextflow run chat.nf -with-conda
 ```
 
 Resume Execution
 
 To reuse previously completed steps (recommended during development or re-analysis):
 
-```bash./nextflow run chat.nf -with-conda -resume
+```bash
+./nextflow run chat.nf -with-conda -resume
 ```
 
 First-Run Behavior
