@@ -31,11 +31,8 @@ All dependencies are handled via **Conda**, making the pipeline portable and eas
 To run NanoPipe, the following are required:
 
 - **Java (JDK ≥ 11)**  
-  Required by Nextflow.
 - **Nextflow**  
-  Workflow execution engine.
 - **Conda** (Miniconda or Anaconda)  
-  Used to manage tool dependencies.
 
 > **Optional but recommended:**  
 > **Mamba** can be used as a faster alternative to Conda for environment resolution.
@@ -55,14 +52,11 @@ The pipeline processes single-end FASTQ files, including both uncompressed and g
 
 Supported file extensions:
 
-`.fastq`
-
-`.fastq.gz`
+`.fastq` and`.fastq.gz`
 
 Input files must be placed in the directory specified by the parameter:
 
 params.fastq_dir (default: data/)
-
 
 By default, the pipeline searches for:
 ```bash
@@ -165,33 +159,3 @@ Users may override these parameters at runtime:
 
 This design ensures portability across different projects and file systems.
 ---
-
-###  Reproducibility and Portability
-
-This pipeline adheres to modern reproducible research practices:
-
-Tool dependencies are explicitly defined in env.yml
-
-Nextflow guarantees deterministic task execution
-
-No absolute or machine-specific paths are used
-
-The -resume option enables exact reuse of prior computations
-
-As a result, the same inputs will produce consistent outputs across different systems.
-
-###  Intended Use
-
-This pipeline is intended for:
-
-Educational case studies in bioinformatics and data science
-
-Introductory quality control workflows for Oxford Nanopore sequencing data
-
-Small- to medium-scale sequencing experiments
-
-Teaching reproducible workflow design using Nextflow and Conda
-
-Preliminary data exploration prior to downstream analysis
-
-
