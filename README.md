@@ -98,14 +98,14 @@ mkdir -p data
 ```
 
 ```bash
-cp data_path>
+cp <data_path>
 ```
 
 The pipeline is executed locally using Nextflow.
 
 ## Standard Execution
 ```bash
-./nextflow run qcpipe.nf -with-conda
+nextflow run qcpipe.nf -with-conda
 ```
 
 ## Resume Execution
@@ -128,13 +128,11 @@ The environment is cached and reused for subsequent runs.
 
 All results are organized per sample, ensuring clarity and traceability.
 ```bash
-data/results/<sample_id>/
-├── nanoqc/
-│   └── <sample_id>_NanoQC.html
-└── nanoplot/
-    ├── NanoPlot-report.html
-    ├── *.png
-    └── *.log
+data/
+ └── results/
+      └── sample_id/
+            ├── nanoplot/
+            └── nanoqc/
 ```
 ---
 
