@@ -210,15 +210,22 @@ The first script (`custom_script.py`) processes a FASTQ file and calculates the 
 - Read length  
 - Mean read quality score  
 
-The results are saved in a structured format (CSV or TXT) for downstream analysis.
+The results are saved in a structured format (CSV) for downstream analysis.
 
-This script reads a FASTQ file and computes GC content, read length, and mean read quality score **for each read**.  
-The results are saved in a CSV file.
+Run the script on a single FASTQ file:
 
 ```bash
-python custom_script.py \
-  --input data/sample.fastq.gz \
-  --output sample_read_stats.csv
+python custom_py.py \
+  --input path/to/sample.fastq.gz \
+  --outdir results
+```
+The output file will be automatically named using the input filename (e.g.,barcode77.fastq.gz → barcode77_stats.csv) and saved in the specified output directory.
+
+To process multiple FASTQ files in a directory:
+```bash
+for fq in fastqz/*.fastq.gz; do
+  python custom_py.py --input "$fq" --outdir results
+done
 ```
 **Output example:**
 - `SampleID`
