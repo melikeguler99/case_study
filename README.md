@@ -64,8 +64,9 @@ params.fastq_dir (default: data/)
 
 
 By default, the pipeline searches for:
-
+```bash
 data/*.fastq*
+```
 
 Sample Identification
 
@@ -73,8 +74,10 @@ Sample names are automatically inferred from file names by removing the FASTQ ex
 For example:
 
 Input file	Sample name
+```bash
 barcode77.fastq.gz	barcode77
 sample_A.fastq	sample_A
+```
 
 This allows the pipeline to scale seamlessly to multiple samples without manual configuration.
 
@@ -83,13 +86,15 @@ This allows the pipeline to scale seamlessly to multiple samples without manual 
 The pipeline is executed locally using Nextflow.
 
 Standard Execution
-./nextflow run chat.nf -with-conda
+```bash./nextflow run chat.nf -with-conda
+```
 
 Resume Execution
 
 To reuse previously completed steps (recommended during development or re-analysis):
 
-./nextflow run chat.nf -with-conda -resume
+```bash./nextflow run chat.nf -with-conda -resume
+```
 
 First-Run Behavior
 
@@ -100,7 +105,7 @@ The environment is cached and reused for subsequent runs.
 ###  Output Structure
 
 All results are organized per sample, ensuring clarity and traceability.
-
+```bash
 data/results/<sample>/
 ├── nanoqc/
 │   └── <sample>_NanoQC.html
@@ -108,7 +113,7 @@ data/results/<sample>/
     ├── NanoPlot-report.html
     ├── *.png
     └── *.log
-
+```
 ### Output Description
 
 NanoQC report
@@ -133,19 +138,19 @@ Users on other operating systems may open the HTML files in any modern web brows
 ###  Configuration and Customization
 
 Default parameters are defined in nextflow.config:
-
+```bash
 params {
   fastq_dir = "$projectDir/data"
   out_dir   = "$projectDir/data/results"
 }
 
-
+```
 Users may override these parameters at runtime:
-
+```bash
 ./nextflow run chat.nf -with-conda \
   --fastq_dir /path/to/fastq_files \
   --out_dir /path/to/output_directory
-
+```
 
 This design ensures portability across different projects and file systems.
 
