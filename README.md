@@ -169,7 +169,7 @@ This design ensures portability across different projects and file systems.
 This repository includes two simple Python scripts for basic quality analysis of FASTQ files in the `case_study/custom_python_scripts/.`
 They are designed for users who want a **transparent, script-based workflow** without relying on advanced QC tools.
 
-## Pipeline Workflow
+# Pipeline Workflow
 
 ![NanoPipe pipeline workflow](https://raw.githubusercontent.com/melikeguler99/case_study/main/workflows/custom_py.png)
 
