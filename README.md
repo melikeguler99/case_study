@@ -172,8 +172,9 @@ params {
 Users may override these parameters at runtime:
 ```bash
 nextflow run qcpipe.nf -with-conda \
-  --fastq_dir /path/to/fastq_files \
-  --out_dir /path/to/output_directory
+>   --fastq_dir <data_path> \
+>   --out_dir <results_folder>
+
 ```
 This design ensures portability across different projects and file systems.
 
