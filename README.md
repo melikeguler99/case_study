@@ -163,17 +163,15 @@ Users on other operating systems may open the HTML files in any modern web brows
 
 Default parameters are defined in nextflow.config:
 ```bash
-params {
-  fastq_dir = "$projectDir/data"
-  out_dir   = "$projectDir/data/results"
-}
+params.fastq_dir = 'data/'
+params.out_dir = 'results/'
 
 ```
 Users may override these parameters at runtime:
 ```bash
 nextflow run qcpipe.nf -with-conda \
->   --fastq_dir <data_path> \
->   --out_dir <results_folder>
+  --fastq_dir <data_path> \
+  --out_dir <results_folder>
 
 ```
 This design ensures portability across different projects and file systems.
