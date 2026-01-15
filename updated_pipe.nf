@@ -9,7 +9,6 @@ workflow {
     Channel.fromPath("${params.fastq_dir}/*.{fastq,fq,fastq.gz,fq.gz}", checkIfExists: true)
         .map { f ->
             def name = f.getBaseName()
-            // handle .fastq.gz / .fq.gz as well
             name = name.replaceFirst(/(\.fastq|\.fq)(\.gz)?$/, '')
             tuple(f, name)
         }
@@ -31,7 +30,7 @@ process nanoqc {
     tuple path(fastq), val(sample_id)
 
     output:
-    directory("${sample_id}/nanoqc") into nanoqc_ch
+    directory("${sample_id}/nanoqc")
 
     script:
     """
@@ -41,7 +40,7 @@ process nanoqc {
     """
 }
 
-publishDir "${params.out_dir}", mode: 'copy', overwrite: true, pattern: '*/*'
+publishDir "${params.out_dir}", mode: 'copy'
 
 /*
  * NanoPlot
@@ -53,7 +52,7 @@ process nanoplot {
     tuple path(fastq), val(sample_id)
 
     output:
-    directory("${sample_id}/nanoplot") into nanoplot_ch
+    directory("${sample_id}/nanoplot")
 
     script:
     """
@@ -62,7 +61,7 @@ process nanoplot {
     """
 }
 
-publishDir "${params.out_dir}", mode: 'copy', overwrite: true, pattern: '*/*'
+publishDir "${params.out_dir}", mode: 'copy'
 
 /*
  * Custom Python: stats (FASTQ -> CSV)
@@ -78,7 +77,7 @@ process readStats {
 
     script:
     """
-    python $projectDir/custom_python_scripts/custom_py.py \
+    python $projectDir/custom_python_scripts/custom_script.py \
       --input $fastq \
       --outdir .
 
@@ -96,7 +95,7 @@ process readStatsViz {
     tuple val(sample_id), path(stats_csv)
 
     output:
-    directory("${sample_id}/custom_plots") into plots_ch
+    directory("${sample_id}/custom_plots")
 
     script:
     """
@@ -108,4 +107,4 @@ process readStatsViz {
     """
 }
 
-publishDir "${params.out_dir}", mode: 'copy', overwrite: true, pattern: '*/*'
+publishDir "${params.out_dir}", mode: 'copy'
