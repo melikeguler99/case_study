@@ -30,7 +30,7 @@ process nanoqc {
     tuple path(fastq), val(sample_id)
 
     output:
-    directory("${sample_id}/nanoqc")
+    path("${sample_id}/nanoqc")
 
     script:
     """
@@ -40,7 +40,7 @@ process nanoqc {
     """
 }
 
-publishDir "${params.out_dir}", mode: 'copy'
+publishDir "${params.out_dir}", mode:'copy'
 
 /*
  * NanoPlot
@@ -52,7 +52,7 @@ process nanoplot {
     tuple path(fastq), val(sample_id)
 
     output:
-    directory("${sample_id}/nanoplot")
+    path("${sample_id}/nanoplot")
 
     script:
     """
@@ -61,7 +61,7 @@ process nanoplot {
     """
 }
 
-publishDir "${params.out_dir}", mode: 'copy'
+publishDir "${params.out_dir}", mode:'copy'
 
 /*
  * Custom Python: stats (FASTQ -> CSV)
@@ -95,7 +95,7 @@ process readStatsViz {
     tuple val(sample_id), path(stats_csv)
 
     output:
-    directory("${sample_id}/custom_plots")
+    path("${sample_id}/custom_plots")
 
     script:
     """
@@ -107,4 +107,4 @@ process readStatsViz {
     """
 }
 
-publishDir "${params.out_dir}", mode: 'copy'
+publishDir "${params.out_dir}", mode:'copy'
