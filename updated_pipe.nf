@@ -31,16 +31,16 @@ process nanoqc {
     tuple path(fastq), val(sample_id)
 
     output:
-    path("${params.out_dir}/${sample_id}/nanoqc")
+    directory("${params.out_dir}/${sample_id}/nanoqc")
 
     script:
     """
     mkdir -p ${params.out_dir}/${sample_id}/nanoqc
     nanoqc $fastq
-    # nanoqc writes nanoQC.html in the work dir
     mv nanoQC.html ${params.out_dir}/${sample_id}/nanoqc/${sample_id}_NanoQC.html
     """
 }
+
 
 /*
  * NanoPlot
