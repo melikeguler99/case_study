@@ -56,9 +56,10 @@ process nanoplot {
     script:
     """
     NanoPlot --fastq $fastq -o .
-    for f in *.html; do mv "\$f" "${sample_id}_\$f"; done
+    for f in *.html *.png; do mv "\$f" "${sample_id}_\$f"; done
     """
 }
+
 
 /*
  * Custom Python: stats (FASTQ -> CSV)
