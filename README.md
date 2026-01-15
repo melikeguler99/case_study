@@ -98,7 +98,7 @@ mkdir -p data
 ```
 
 ```bash
-cp <data_path>
+cp <data_path> data/
 ```
 
 The pipeline is executed locally using Nextflow.
