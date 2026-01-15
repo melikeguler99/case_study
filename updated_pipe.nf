@@ -53,21 +53,19 @@ process nanoqc {
 /*
  * Process: NanoPlot
  */
-process nanoplot {
-    tag "$sample_id"
+process processNanoPlot {
+    tag "$sample_name"
+    publishDir "${params.out_dir}/${sample_name}/nanoplot", mode: 'copy'
 
     input:
-    tuple path(fastq), val(sample_id)
+    tuple path(fastq), val(sample_name)
 
     output:
-    path("${sample_id}/nanoplot")
-
-    publishDir "${params.out_dir}", mode: 'copy'
+    path "*"
 
     script:
     """
-    mkdir -p ${sample_id}/nanoplot
-    NanoPlot --fastq $fastq -o ${sample_id}/nanoplot
+    NanoPlot --fastq ${fastq} -o .
     """
 }
 
