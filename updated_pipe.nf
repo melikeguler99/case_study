@@ -1,20 +1,22 @@
 #!/usr/bin/env nextflow
 nextflow.enable.dsl=2
 
+// Default directories if not provided
 params.fastq_dir = params.fastq_dir ?: "$projectDir/data"
 params.out_dir   = params.out_dir   ?: "$projectDir/outputs"
 
 workflow {
 
+    // Find FASTQ files
     Channel.fromPath("${params.fastq_dir}/*.{fastq,fq,fastq.gz,fq.gz}", checkIfExists: true)
         .map { f ->
             def name = f.getBaseName()
-            // handle .fastq.gz / .fq.gz as well
             name = name.replaceFirst(/(\.fastq|\.fq)(\.gz)?$/, '')
             tuple(f, name)
         }
         .set { fastq_ch }
 
+    // Run processes
     nanoqc(fastq_ch)
     nanoplot(fastq_ch)
     readStats(fastq_ch)
@@ -31,14 +33,11 @@ process nanoqc {
     tuple path(fastq), val(sample_id)
 
     output:
-    path("${params.out_dir}/${sample_id}/nanoqc")
+    path("*.html"), publishDir: "${params.out_dir}/${sample_id}/nanoqc", mode: 'copy'
 
     script:
     """
-    mkdir -p ${params.out_dir}/${sample_id}/nanoqc
     nanoqc $fastq
-    # nanoqc writes nanoQC.html in the work dir
-    mv nanoQC.html ${params.out_dir}/${sample_id}/nanoqc/${sample_id}_NanoQC.html
     """
 }
 
@@ -52,18 +51,12 @@ process nanoplot {
     tuple path(fastq), val(sample_id)
 
     output:
-    path("${params.out_dir}/${sample_id}/nanoplot")
+    path("*"), publishDir: "${params.out_dir}/${sample_id}/nanoplot", mode: 'copy'
 
     script:
     """
-    mkdir -p ${params.out_dir}/${sample_id}/nanoplot
-    NanoPlot --fastq $fastq -o ${params.out_dir}/${sample_id}/nanoplot
-
-    # rename output files to include sample_id
-    cd ${params.out_dir}/${sample_id}/nanoplot
-    for f in *.html *.png; do
-        mv "\$f" "${sample_id}_\$f"
-    done
+    NanoPlot --fastq $fastq -o .
+    for f in *.html; do mv "\$f" "${sample_id}_\$f"; done
     """
 }
 
@@ -82,10 +75,10 @@ process readStats {
     script:
     """
     python $projectDir/custom_python_scripts/custom_py.py \
-      --input $fastq \
-      --outdir .
+        --input $fastq \
+        --outdir .
 
-    # custom_py.py writes <sample_id>_stats.csv into outdir
+    # Ensure CSV exists
     test -f ${sample_id}_stats.csv
     """
 }
@@ -100,17 +93,18 @@ process readStatsViz {
     tuple val(sample_id), path(stats_csv)
 
     output:
-    path("${params.out_dir}/${sample_id}/custom_plots")
+    path("*"), publishDir: "${params.out_dir}/${sample_id}/custom_plots", mode: 'copy'
 
     script:
     """
-    mkdir -p ${params.out_dir}/${sample_id}/custom_plots
-
-    # copy/rename CSV
-    cp $stats_csv ${params.out_dir}/${sample_id}/custom_plots/custom_results.csv
-
     python $projectDir/custom_python_scripts/custom_script_vis.py \
-      --input ${params.out_dir}/${sample_id}/custom_plots/custom_results.csv \
-      --outdir ${params.out_dir}/${sample_id}/custom_plots
+        --input $stats_csv \
+        --outdir .
+
+    # Rename PNG to include sample name
+    for f in *.png; do mv "\$f" "${sample_id}_\$f"; done
+
+    # Rename CSV to custom_results.csv
+    mv $stats_csv custom_results.csv
     """
 }
