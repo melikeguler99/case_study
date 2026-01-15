@@ -33,11 +33,12 @@ process nanoqc {
     tuple path(fastq), val(sample_id)
 
     output:
-    path("*.html"), publishDir: "${params.out_dir}/${sample_id}/nanoqc", mode: 'copy'
+    path("${sample_id}_NanoQC.html"), publishDir: "${params.out_dir}/${sample_id}/nanoqc", mode: 'copy'
 
     script:
     """
     nanoqc $fastq
+    mv nanoQC.html ${sample_id}_NanoQC.html
     """
 }
 
@@ -51,7 +52,7 @@ process nanoplot {
     tuple path(fastq), val(sample_id)
 
     output:
-    path("*"), publishDir: "${params.out_dir}/${sample_id}/nanoplot", mode: 'copy'
+    path("${sample_id}_*"), publishDir: "${params.out_dir}/${sample_id}/nanoplot", mode: 'copy'
 
     script:
     """
@@ -59,8 +60,6 @@ process nanoplot {
     for f in *.html *.png; do mv "\$f" "${sample_id}_\$f"; done
     """
 }
-
-
 
 /*
  * Custom Python: stats (FASTQ -> CSV)
@@ -95,18 +94,18 @@ process readStatsViz {
     tuple val(sample_id), path(stats_csv)
 
     output:
-    path("*"), publishDir: "${params.out_dir}/${sample_id}/custom_plots", mode: 'copy'
+    path("custom_results.csv"), path("${sample_id}_*.png"), publishDir: "${params.out_dir}/${sample_id}/custom_plots", mode: 'copy'
 
     script:
     """
+    # Rename CSV before publishing
+    mv $stats_csv custom_results.csv
+
     python $projectDir/custom_python_scripts/custom_script_vis.py \
-        --input $stats_csv \
+        --input custom_results.csv \
         --outdir .
 
-    # Rename PNG to include sample name
+    # Rename PNGs to include sample name
     for f in *.png; do mv "\$f" "${sample_id}_\$f"; done
-
-    # Rename CSV to custom_results.csv
-    mv $stats_csv custom_results.csv
     """
 }
