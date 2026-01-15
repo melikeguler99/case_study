@@ -1,135 +1,108 @@
+#!/usr/bin/env nextflow
 nextflow.enable.dsl=2
 
-/*
- * updated_pipe.nf
- *
- * Inputs:
- *   params.fastq_dir = "<project>/data"
- * Outputs:
- *   params.out_dir   = "<project>/data/results"
- *
- * Runs:
- *   - NanoQC (HTML)
- *   - NanoPlot (directory of plots)
- *   - Custom per-read stats CSV (GC%, ReadLength, Mean Phred)
- *   - Visualization plots + summary stats from the CSV
- */
-
-params.fastq_dir = "${projectDir}/data"
-params.out_dir   = "${projectDir}/data/results"
+params.fastq_dir = params.fastq_dir ?: "$projectDir/data"
+params.out_dir   = params.out_dir   ?: "$projectDir/outputs"
 
 workflow {
 
-    // Find FASTQ/FASTQ.GZ files and create (fastq, sample_name) tuples
-    Channel.fromPath("${params.fastq_dir}/*.fastq*")
-        .map { file ->
-            // Handles: sample.fastq, sample.fastq.gz
-            def sample_name = file.getBaseName().replaceFirst(/\.fastq$/, '')
-            tuple(file, sample_name)
+    Channel.fromPath("${params.fastq_dir}/*.{fastq,fq,fastq.gz,fq.gz}", checkIfExists: true)
+        .map { f ->
+            def name = f.getBaseName()
+            // handle .fastq.gz / .fq.gz as well
+            name = name.replaceFirst(/(\.fastq|\.fq)(\.gz)?$/, '')
+            tuple(f, name)
         }
         .set { fastq_ch }
 
-    // Existing QC tools
-    processNanoQC(fastq_ch)
-    processNanoPlot(fastq_ch)
-
-    // Part 1: per-read metrics -> CSV
-    read_stats_ch = processReadStats(fastq_ch)
-
-    // Part 2: plots + summary stats from CSV
-    processReadStatsViz(read_stats_ch)
+    nanoqc(fastq_ch)
+    nanoplot(fastq_ch)
+    readStats(fastq_ch)
+    readStatsViz(readStats.out)
 }
 
-
-/* -------------------------
+/*
  * NanoQC
- * ------------------------- */
-process processNanoQC {
-    tag "$sample_name"
-    publishDir "${params.out_dir}/${sample_name}/nanoqc", mode: 'copy'
+ */
+process nanoqc {
+    tag "$sample_id"
 
     input:
-    tuple path(fastq), val(sample_name)
+    tuple path(fastq), val(sample_id)
 
     output:
-    path "${sample_name}_NanoQC.html"
+    path("${params.out_dir}/${sample_id}/nanoqc")
 
     script:
     """
+    mkdir -p ${params.out_dir}/${sample_id}/nanoqc
     nanoqc $fastq
-    mv nanoQC.html ${sample_name}_NanoQC.html
+    # nanoqc writes nanoQC.html in the work dir
+    mv nanoQC.html ${params.out_dir}/${sample_id}/nanoqc/${sample_id}_NanoQC.html
     """
 }
 
-
-/* -------------------------
+/*
  * NanoPlot
- * ------------------------- */
-process processNanoPlot {
-    tag "$sample_name"
-    publishDir "${params.out_dir}/${sample_name}/nanoplot", mode: 'copy'
+ */
+process nanoplot {
+    tag "$sample_id"
 
     input:
-    tuple path(fastq), val(sample_name)
+    tuple path(fastq), val(sample_id)
 
     output:
-    path "*"
+    path("${params.out_dir}/${sample_id}/nanoplot")
 
     script:
     """
-    NanoPlot --fastq $fastq -o .
+    mkdir -p ${params.out_dir}/${sample_id}/nanoplot
+    NanoPlot --fastq $fastq -o ${params.out_dir}/${sample_id}/nanoplot
     """
 }
 
-
-/* -------------------------
- * Part 1: Custom per-read stats -> CSV
- * Requires: python, pandas/numpy not needed for Part 1 script (stdlib ok)
- * Output: <sample>_read_stats.csv
- * ------------------------- */
-process processReadStats {
-    tag "$sample_name"
-    publishDir "${params.out_dir}/${sample_name}/readstats", mode: 'copy'
+/*
+ * Custom Python: stats (FASTQ -> CSV)
+ */
+process readStats {
+    tag "$sample_id"
 
     input:
-    tuple path(fastq), val(sample_name)
+    tuple path(fastq), val(sample_id)
 
     output:
-    tuple val(sample_name), path("${sample_name}_read_stats.csv")
+    tuple val(sample_id), path("${sample_id}_stats.csv")
 
     script:
     """
-    python ${projectDir}/scripts/fastq_read_stats.py \
+    python $projectDir/custom_python_scripts/custom_py.py \
       --input $fastq \
-      --sample $sample_name \
-      --out ${sample_name}_read_stats.csv
+      --outdir .
+
+    # custom_py.py writes <sample_id>_stats.csv into outdir
+    test -f ${sample_id}_stats.csv
     """
 }
 
-
-/* -------------------------
- * Part 2: Visualization + summary stats from CSV
- * Requires: python + pandas + numpy + matplotlib
- * Outputs:
- *   - <sample>_gc_hist.png
- *   - <sample>_readlength_hist.png
- *   - <sample>_quality_hist.png
- *   - <sample>_summary_stats.txt
- * ------------------------- */
-process processReadStatsViz {
-    tag "$sample_name"
-    publishDir "${params.out_dir}/${sample_name}/readstats_figures", mode: 'copy'
+/*
+ * Custom Python: visualization (CSV -> PNG)
+ */
+process readStatsViz {
+    tag "$sample_id"
 
     input:
-    tuple val(sample_name), path(csv)
+    tuple val(sample_id), path(stats_csv)
 
     output:
-    path "*"
+    path("${params.out_dir}/${sample_id}/custom_plots")
 
     script:
     """
-    python ${projectDir}/scripts/plot_read_stats.py \
-      --input $csv \
-      --outdir .
+    mkdir -p ${params.out_dir}/${sample_id}/custom_plots
+
+    python $projectDir/custom_python_scripts/custom_script_vis.py \
+      --input $stats_csv \
+      --outdir ${params.out_dir}/${sample_id}/custom_plots
+
     """
 }
