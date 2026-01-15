@@ -32,6 +32,8 @@ process nanoqc {
     output:
     path("${sample_id}/nanoqc")
 
+    publishDir "${params.out_dir}", mode: 'copy'
+
     script:
     """
     mkdir -p ${sample_id}/nanoqc
@@ -39,8 +41,6 @@ process nanoqc {
     mv nanoQC.html ${sample_id}/nanoqc/${sample_id}_NanoQC.html
     """
 }
-
-publishDir "${params.out_dir}", mode:'copy'
 
 /*
  * NanoPlot
@@ -54,14 +54,14 @@ process nanoplot {
     output:
     path("${sample_id}/nanoplot")
 
+    publishDir "${params.out_dir}", mode: 'copy'
+
     script:
     """
     mkdir -p ${sample_id}/nanoplot
     NanoPlot --fastq $fastq -o ${sample_id}/nanoplot
     """
 }
-
-publishDir "${params.out_dir}", mode:'copy'
 
 /*
  * Custom Python: stats (FASTQ -> CSV)
@@ -74,6 +74,8 @@ process readStats {
 
     output:
     tuple val(sample_id), path("${sample_id}_stats.csv")
+
+    publishDir "${params.out_dir}", mode: 'copy'
 
     script:
     """
@@ -97,14 +99,13 @@ process readStatsViz {
     output:
     path("${sample_id}/custom_plots")
 
+    publishDir "${params.out_dir}", mode: 'copy'
+
     script:
     """
     mkdir -p ${sample_id}/custom_plots
-
     python $projectDir/custom_python_scripts/custom_script_vis.py \
       --input $stats_csv \
       --outdir ${sample_id}/custom_plots
     """
 }
-
-publishDir "${params.out_dir}", mode:'copy'
