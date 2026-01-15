@@ -75,7 +75,7 @@ process readStats {
 
     script:
     """
-    python $projectDir/custom_python_scripts/custom_py.py \
+    python $projectDir/custom_python_scripts/custom_script.py \
       --input $fastq \
       --outdir .
 
