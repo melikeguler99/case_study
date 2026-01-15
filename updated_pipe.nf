@@ -2,13 +2,14 @@
 nextflow.enable.dsl=2
 
 params.fastq_dir = params.fastq_dir ?: "$projectDir/data"
-params.out_dir   = params.out_dir   ?: "$projectDir/outputs"
+params.out_dir   = params.out_dir   ?: "$projectDir/data/results"
 
 workflow {
 
     Channel.fromPath("${params.fastq_dir}/*.{fastq,fq,fastq.gz,fq.gz}", checkIfExists: true)
         .map { f ->
-            def name = f.getBaseName().replaceFirst(/(\.fastq|\.fq)(\.gz)?$/, '')
+            def name = f.getBaseName()
+            name = name.replaceFirst(/(\.fastq|\.fq)(\.gz)?$/, '')
             tuple(f, name)
         }
         .set { fastq_ch }
@@ -19,6 +20,9 @@ workflow {
     readStatsViz(readStats.out)
 }
 
+/*
+ * NanoQC
+ */
 process nanoqc {
     tag "$sample_id"
 
@@ -26,16 +30,21 @@ process nanoqc {
     tuple path(fastq), val(sample_id)
 
     output:
-    path("*.html")
+    path("${sample_id}/nanoqc")
 
-    publishDir "${params.out_dir}/${sample_id}/nanoqc", mode: 'copy'
+    publishDir "${params.out_dir}", mode: 'copy'
 
     script:
     """
+    mkdir -p ${sample_id}/nanoqc
     nanoqc $fastq
+    mv nanoQC.html ${sample_id}/nanoqc/${sample_id}_NanoQC.html
     """
 }
 
+/*
+ * NanoPlot
+ */
 process nanoplot {
     tag "$sample_id"
 
@@ -43,21 +52,20 @@ process nanoplot {
     tuple path(fastq), val(sample_id)
 
     output:
-    path("${sample_id}_*.png")
-    path("${sample_id}_*.html")
+    path("${sample_id}/nanoplot")
 
-    publishDir "${params.out_dir}/${sample_id}/nanoplot", mode: 'copy'
+    publishDir "${params.out_dir}", mode: 'copy'
 
     script:
     """
-    NanoPlot --fastq $fastq -o .
-
-    for f in *.html *.png; do
-        mv "\$f" "${sample_id}_\$f"
-    done
+    mkdir -p ${sample_id}/nanoplot
+    NanoPlot --fastq $fastq -o ${sample_id}/nanoplot
     """
 }
 
+/*
+ * Custom Python: stats (FASTQ -> CSV)
+ */
 process readStats {
     tag "$sample_id"
 
@@ -67,16 +75,21 @@ process readStats {
     output:
     tuple val(sample_id), path("${sample_id}_stats.csv")
 
+    publishDir "${params.out_dir}", mode: 'copy'
+
     script:
     """
-    python $projectDir/custom_python_scripts/custom_py.py \
-        --input $fastq \
-        --outdir .
+    python $projectDir/custom_python_scripts/custom_script.py \
+      --input $fastq \
+      --outdir .
 
     test -f ${sample_id}_stats.csv
     """
 }
 
+/*
+ * Custom Python: visualization (CSV -> PNG)
+ */
 process readStatsViz {
     tag "$sample_id"
 
@@ -84,21 +97,15 @@ process readStatsViz {
     tuple val(sample_id), path(stats_csv)
 
     output:
-    path("custom_results.csv")
-    path("${sample_id}_*.png")
+    path("${sample_id}/custom_plots")
 
-    publishDir "${params.out_dir}/${sample_id}/custom_plots", mode: 'copy'
+    publishDir "${params.out_dir}", mode: 'copy'
 
     script:
     """
-    mv $stats_csv custom_results.csv
-
+    mkdir -p ${sample_id}/custom_plots
     python $projectDir/custom_python_scripts/custom_script_vis.py \
-        --input custom_results.csv \
-        --outdir .
-
-    for f in *.png; do
-        mv "\$f" "${sample_id}_\$f"
-    done
+      --input $stats_csv \
+      --outdir ${sample_id}/custom_plots
     """
 }
