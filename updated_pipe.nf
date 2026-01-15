@@ -2,7 +2,7 @@
 nextflow.enable.dsl=2
 
 params.fastq_dir = params.fastq_dir ?: "$projectDir/data"
-params.out_dir   = params.out_dir   ?: "$projectDir/outputs"
+params.out_dir   = params.out_dir   ?: "$projectDir/data/results"
 
 workflow {
 
@@ -31,16 +31,17 @@ process nanoqc {
     tuple path(fastq), val(sample_id)
 
     output:
-    directory("${params.out_dir}/${sample_id}/nanoqc")
+    directory("${sample_id}/nanoqc") into nanoqc_ch
 
     script:
     """
-    mkdir -p ${params.out_dir}/${sample_id}/nanoqc
+    mkdir -p ${sample_id}/nanoqc
     nanoqc $fastq
-    mv nanoQC.html ${params.out_dir}/${sample_id}/nanoqc/${sample_id}_NanoQC.html
+    mv nanoQC.html ${sample_id}/nanoqc/${sample_id}_NanoQC.html
     """
 }
 
+publishDir "${params.out_dir}", mode: 'copy', overwrite: true, pattern: '*/*'
 
 /*
  * NanoPlot
@@ -52,14 +53,16 @@ process nanoplot {
     tuple path(fastq), val(sample_id)
 
     output:
-    path("${params.out_dir}/${sample_id}/nanoplot")
+    directory("${sample_id}/nanoplot") into nanoplot_ch
 
     script:
     """
-    mkdir -p ${params.out_dir}/${sample_id}/nanoplot
-    NanoPlot --fastq $fastq -o ${params.out_dir}/${sample_id}/nanoplot
+    mkdir -p ${sample_id}/nanoplot
+    NanoPlot --fastq $fastq -o ${sample_id}/nanoplot
     """
 }
+
+publishDir "${params.out_dir}", mode: 'copy', overwrite: true, pattern: '*/*'
 
 /*
  * Custom Python: stats (FASTQ -> CSV)
@@ -75,11 +78,10 @@ process readStats {
 
     script:
     """
-    python $projectDir/custom_python_scripts/custom_script.py \
+    python $projectDir/custom_python_scripts/custom_py.py \
       --input $fastq \
       --outdir .
 
-    # custom_py.py writes <sample_id>_stats.csv into outdir
     test -f ${sample_id}_stats.csv
     """
 }
@@ -94,15 +96,16 @@ process readStatsViz {
     tuple val(sample_id), path(stats_csv)
 
     output:
-    path("${params.out_dir}/${sample_id}/custom_plots")
+    directory("${sample_id}/custom_plots") into plots_ch
 
     script:
     """
-    mkdir -p ${params.out_dir}/${sample_id}/custom_plots
+    mkdir -p ${sample_id}/custom_plots
 
     python $projectDir/custom_python_scripts/custom_script_vis.py \
       --input $stats_csv \
-      --outdir ${params.out_dir}/${sample_id}/custom_plots
-
+      --outdir ${sample_id}/custom_plots
     """
 }
+
+publishDir "${params.out_dir}", mode: 'copy', overwrite: true, pattern: '*/*'
