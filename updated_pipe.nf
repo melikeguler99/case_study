@@ -1,20 +1,24 @@
 #!/usr/bin/env nextflow
 nextflow.enable.dsl=2
 
-// MANUAL paths
-params.fastq_dir = "/Users/melike/Desktop/case_study_2026massive/data"
-params.out_dir   = "/Users/melike/Desktop/case_study_2026massive/results_5"
-params.script_dir = "/Users/melike/Desktop/case_study_2026massive/custom_python_scripts"
+/*
+ * PARAMS
+ */
+params.fastq_dir = params.fastq_dir ?: "$projectDir/data"
+params.out_dir   = params.out_dir   ?: "$projectDir/results"
 
 workflow {
 
-    Channel
-        .fromPath("${params.fastq_dir}/*.fastq.gz", checkIfExists: true)
-        .map { file ->
-            def name = file.getBaseName().replaceFirst(/\.fastq\.gz$/, '')
-            tuple(file, name)
-        }
-        .set { fastq_ch }
+    Channel.fromPath(
+        "${params.fastq_dir}/*.{fastq,fq,fastq.gz,fq.gz}",
+        checkIfExists: true
+    )
+    .map { f ->
+        def name = f.getBaseName()
+        name = name.replaceFirst(/(\.fastq|\.fq)(\.gz)?$/, '')
+        tuple(f, name)
+    }
+    .set { fastq_ch }
 
     nanoqc(fastq_ch)
     nanoplot(fastq_ch)
@@ -22,64 +26,97 @@ workflow {
     readStatsViz(readStats.out)
 }
 
+
+/*
+ * Process: NanoQC
+ */
 process nanoqc {
-    tag "$id"
+    tag "$sample_id"
+
     input:
-        tuple path(fq), val(id)
+    tuple path(fastq), val(sample_id)
+
     output:
-        path("${id}/nanoqc")
+    path("${sample_id}/nanoqc")
+
     publishDir "${params.out_dir}", mode: 'copy'
+
     script:
     """
-    mkdir -p ${id}/nanoqc
-    nanoqc $fq
-    mv nanoQC.html ${id}/nanoqc/${id}_NanoQC.html
+    mkdir -p ${sample_id}/nanoqc
+    nanoqc $fastq
+    mv nanoQC.html ${sample_id}/nanoqc/${sample_id}_NanoQC.html
     """
 }
 
+
+/*
+ * Process: NanoPlot
+ */
 process nanoplot {
-    tag "$id"
+    tag "$sample_id"
+
     input:
-        tuple path(fq), val(id)
+    tuple path(fastq), val(sample_id)
+
     output:
-        path("${id}/nanoplot")
+    path("${sample_id}/nanoplot")
+
     publishDir "${params.out_dir}", mode: 'copy'
+
     script:
     """
-    mkdir -p ${id}/nanoplot
-    NanoPlot --fastq $fq -o ${id}/nanoplot
+    mkdir -p ${sample_id}/nanoplot
+    NanoPlot --fastq $fastq -o ${sample_id}/nanoplot
     """
 }
 
+
+/*
+ * Process: Custom Python stats (FASTQ -> CSV)
+ */
 process readStats {
-    tag "$id"
+    tag "$sample_id"
+
     input:
-        tuple path(fq), val(id)
+    tuple path(fastq), val(sample_id)
+
     output:
-        tuple val(id), path("${id}_stats.csv")
+    tuple val(sample_id), path("${sample_id}_stats.csv")
+
     publishDir "${params.out_dir}", mode: 'copy'
+
     script:
     """
-    python ${params.script_dir}/custom_script.py \
-        --input $fq \
-        --outdir .
+    python $projectDir/custom_python_scripts/custom_script.py \
+      --input $fastq \
+      --outdir .
 
-    test -f ${id}_stats.csv
+    test -f ${sample_id}_stats.csv
     """
 }
 
+
+/*
+ * Process: Custom Python Viz (CSV -> PNGs)
+ */
 process readStatsViz {
-    tag "$id"
+    tag "$sample_id"
+
     input:
-        tuple val(id), path(csv)
+    tuple val(sample_id), path(stats_csv)
+
     output:
-        path("${id}/custom_plots")
+    path("${sample_id}/custom_plots")
+
     publishDir "${params.out_dir}", mode: 'copy'
+
     script:
     """
-    mkdir -p ${id}/custom_plots
-    python ${params.script_dir}/custom_script_vis.py \
-        --input $csv \
-        --outdir ${id}/custom_plots
+    mkdir -p ${sample_id}/custom_plots
+
+    python $projectDir/custom_python_scripts/custom_script_vis.py \
+      --input $stats_csv \
+      --outdir ${sample_id}/custom_plots
     """
 }
