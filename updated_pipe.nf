@@ -61,6 +61,7 @@ process nanoplot {
 }
 
 
+
 /*
  * Custom Python: stats (FASTQ -> CSV)
  */
