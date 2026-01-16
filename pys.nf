@@ -7,13 +7,12 @@ workflow {
 
     Channel
         .fromPath("${params.fastq_dir}/*.{fastq,fq,fastq.gz,fq.gz}", checkIfExists: true)
-        .map { f ->
-            def name = f.getBaseName()
-            // handle .fastq.gz / .fq.gz
-            if (name.endsWith(".fastq")) name = name[0..-6]
-            if (name.endsWith(".fq"))    name = name[0..-4]
-            tuple(name, f)
-        }
+.map { f ->
+    def name = f.name
+    name = name.replaceFirst(/(\.fastq|\.fq)(\.gz)?$/, '')
+    tuple(name, f)
+}
+
         .set { ch_reads }
 
     ADVANCED_QC(ch_reads)
