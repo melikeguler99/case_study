@@ -18,24 +18,32 @@ workflow {
     advancedQC(fastq_ch)
     customQC(fastq_ch)
 }
-
 process advancedQC {
     tag "${sample}"
     publishDir "${params.out_dir}/${sample}", mode: 'copy'
-
     conda 'qc_env.yml'
 
     input:
     tuple val(sample), path(fastq)
 
     output:
-    tuple val(sample), path("${params.out_dir}/${sample}")
+    tuple val(sample), path("${sample}")
 
     script:
     """
-    mkdir -p nanoqc nanoplot
+    mkdir -p ${sample}/nanoqc ${sample}/nanoplot
 
     python3 - << 'EOF'
+from nanoQC.nanoQC import main as nanoqc_main
+import sys
+sys.argv = ["nanoQC", "-o", "${sample}/nanoqc", "${fastq}"]
+nanoqc_main()
+EOF
+
+    NanoPlot --fastq ${fastq} -o ${sample}/nanoplot
+    """
+}
+
 from nanoQC.nanoQC import main as nanoqc_main
 import sys
 sys.argv = ["nanoQC", "-o", "nanoqc", "${fastq}"]
@@ -47,11 +55,9 @@ EOF
     mv nanoqc nanoplot ./
     """
 }
-
 process customQC {
     tag "${sample}"
     publishDir "${params.out_dir}/${sample}", mode: 'copy'
-
     conda 'qc_env.yml'
 
     input:
@@ -63,6 +69,11 @@ process customQC {
     script:
     """
     python3 - << 'EOF'
+# ... your code ...
+EOF
+    """
+}
+
 import gzip
 import pandas as pd
 import numpy as np
