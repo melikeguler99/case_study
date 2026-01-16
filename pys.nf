@@ -32,13 +32,6 @@ process ADVANCED_QC {
     path "nanoqc",   optional: true
     path "nanoplot", optional: true
 
-    /*
-      We create exactly:
-        nanoqc/   (NanoQC output)
-        nanoplot/ (NanoPlot output)
-      and publish them into: results/<sample_id>/
-    */
-
     script:
     """
     set -euo pipefail
@@ -67,6 +60,7 @@ process CUSTOM_QC {
 
     output:
     path "read_metrics.csv"
+    path "custom_qc_histograms.png"
 
     script:
     """
@@ -77,7 +71,8 @@ process CUSTOM_QC {
 
     python ${projectDir}/scripts/custom_qc.py \\
       --input "${fastq}" \\
-      --out_csv "read_metrics.csv"
+      --out_csv "read_metrics.csv" \\
+      --plot_png "custom_qc_histograms.png"
 
     echo "✔ Custom QC finished for ${sample_id}"
     """
