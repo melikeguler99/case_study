@@ -58,7 +58,7 @@ EOF
 process customQC {
     tag "${sample}"
     publishDir "${params.out_dir}/${sample}", mode: 'copy'
-    conda 'qc_env.yml'
+    conda "qc_env.yml"
 
     input:
     tuple val(sample), path(fastq)
@@ -69,19 +69,16 @@ process customQC {
     script:
     """
     python3 - << 'EOF'
-# ... your code ...
-EOF
-    """
-}
-
 import gzip
 import pandas as pd
 import numpy as np
+import matplotlib
+matplotlib.use("Agg")  # headless backend for Nextflow
 import matplotlib.pyplot as plt
 from Bio import SeqIO
 
-# --- exact same functions ---
-def calc_gc(seq: str) -> float:
+# --- functions from your original code ---
+def calc_gc(seq):
     seq = seq.upper()
     g = seq.count("G")
     c = seq.count("C")
@@ -102,23 +99,52 @@ def parse_fastq(fastq_file):
             data.append([record.id, length, round(mq,3), round(gc,2)])
     return pd.DataFrame(data, columns=["read_id","length_bp","mean_q","gc_percent"])
 
-def save_metrics(df, out_csv):
-    df.to_csv(out_csv, index=False)
-
-def print_summary(df):
-    summary = pd.DataFrame({
-        "mean":[df.gc_percent.mean(), df.length_bp.mean(), df.mean_q.mean()],
-        "std":[df.gc_percent.std(), df.length_bp.std(), df.mean_q.std()],
-        "median":[df.gc_percent.median(), df.length_bp.median(), df.mean_q.median()],
-        "min":[df.gc_percent.min(), df.length_bp.min(), df.mean_q.min()],
-        "max":[df.gc_percent.max(), df.length_bp.max(), df.mean_q.max()],
-    }, index=["GC_percent","Length_bp","Mean_Q"])
-    print(summary.round(3))
-
+# --- read data ---
 df = parse_fastq("${fastq}")
+
+# --- save csv ---
 out = "${sample}_read_metrics.csv"
-save_metrics(df, out)
-print_summary(df)
+df.to_csv(out, index=False)
+print(f"Wrote: {out}")
+
+# --- summary print ---
+summary = pd.DataFrame({
+    "mean":[df.gc_percent.mean(), df.length_bp.mean(), df.mean_q.mean()],
+    "std":[df.gc_percent.std(), df.length_bp.std(), df.mean_q.std()],
+    "median":[df.gc_percent.median(), df.length_bp.median(), df.mean_q.median()],
+    "min":[df.gc_percent.min(), df.length_bp.min(), df.mean_q.min()],
+    "max":[df.gc_percent.max(), df.length_bp.max(), df.mean_q.max()],
+}, index=["GC_percent","Length_bp","Mean_Q"])
+print(summary.round(3))
+
+# --- custom histograms ---
+plt.figure(figsize=(15,4))
+
+# GC
+plt.subplot(1,3,1)
+plt.hist(df.gc_percent, bins=60, color="#6C5CE7", alpha=0.8)
+plt.xlabel("GC %")
+plt.ylabel("Count")
+plt.title("GC content distribution")
+
+# Length (kb)
+plt.subplot(1,3,2)
+plt.hist(df.length_bp/1000, bins=80, color="#00B894", alpha=0.8)
+plt.xlabel("Length (kb)")
+plt.ylabel("Count")
+plt.title("Read length (kb)")
+
+# Quality
+plt.subplot(1,3,3)
+plt.hist(df.mean_q, bins=60, color="#E17055", alpha=0.8)
+plt.xlabel("Mean Q")
+plt.ylabel("Count")
+plt.title("Mean read quality")
+
+plt.tight_layout()
+plt.savefig(f"${sample}_qc_plots.png", dpi=150)
+print(f"Wrote: ${sample}_qc_plots.png")
+
 EOF
     """
 }
