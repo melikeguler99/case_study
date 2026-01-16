@@ -68,16 +68,10 @@ process CUSTOM_QC {
     output:
     path "read_metrics.csv"
 
-    /*
-      Output filename stays EXACTLY: read_metrics.csv
-      It will land in: results/<sample_id>/read_metrics.csv
-    */
-
-    env.MPLBACKEND = "Agg"
-
     script:
     """
     set -euo pipefail
+    export MPLBACKEND=Agg
 
     echo "=== Processing ${sample_id} (CUSTOM_QC) ==="
 
