@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
+import argparse
 import gzip
 from pathlib import Path
-import argparse
 
 import matplotlib.pyplot as plt
+import matplotlib.gridspec as gridspec
 import numpy as np
 import pandas as pd
 from Bio import SeqIO
@@ -12,13 +13,13 @@ from Bio import SeqIO
 # CONFIG / COLORS
 # -----------------------------
 COLORS = {
-    "gc": "#6C5CE7",   # purple
-    "len": "#00B894",  # teal / green
-    "q": "#E17055",    # soft orange
+    "gc": "#6C5CE7",
+    "len": "#00B894",
+    "q": "#E17055",
 }
 
 # -----------------------------
-# FUNCTIONS
+# METRICS
 # -----------------------------
 def calc_gc(seq: str) -> float:
     seq = str(seq).upper()
@@ -38,26 +39,25 @@ def parse_fastq(fastq_file: Path) -> pd.DataFrame:
 
     with open_fn(fastq_file, "rt") as handle:
         for record in SeqIO.parse(handle, "fastq"):
-            length = len(record.seq)
-            gc = calc_gc(record.seq)
-            mq = mean_quality(record.letter_annotations["phred_quality"])
-            data.append([record.id, length, round(mq, 3), round(gc, 2)])
+            data.append(
+                [
+                    record.id,
+                    len(record.seq),
+                    round(mean_quality(record.letter_annotations["phred_quality"]), 3),
+                    round(calc_gc(record.seq), 2),
+                ]
+            )
 
-    df = pd.DataFrame(
-        data,
-        columns=["read_id", "length_bp", "mean_q", "gc_percent"],
+    return pd.DataFrame(
+        data, columns=["read_id", "length_bp", "mean_q", "gc_percent"]
     )
-    return df
 
 
-def save_metrics(df: pd.DataFrame, out_csv: Path):
-    df.to_csv(out_csv, index=False)
-    print(f"✔ Finished! Written: {out_csv}")
-
-
-def print_summary(df: pd.DataFrame):
-    """Clean, compact DataFrame-style summary."""
-    summary = pd.DataFrame(
+# -----------------------------
+# SUMMARY
+# -----------------------------
+def build_summary(df: pd.DataFrame) -> pd.DataFrame:
+    return pd.DataFrame(
         {
             "mean": [
                 df["gc_percent"].mean(),
@@ -87,30 +87,31 @@ def print_summary(df: pd.DataFrame):
         },
         index=["GC_percent", "Length_bp", "Mean_Q"],
     )
+
+
+def print_summary(df: pd.DataFrame):
+    summary = build_summary(df)
     print("\n=== Summary statistics ===")
     print(summary.round(3))
 
 
+# -----------------------------
+# PLOTTING
+# -----------------------------
 def plot_distributions(
     df: pd.DataFrame,
-    bins_gc: int = 60,
-    bins_len: int = 80,
-    bins_q: int = 60,
-    clip_len: int | None = None,
-    use_log_len: bool = True,
-    plot_png: str = "custom_qc_histograms.png",
-    dpi: int = 150,
+    plot_png: Path,
+    bins_gc=60,
+    bins_len=80,
+    bins_q=60,
+    clip_len=None,
+    use_log_len=True,
+    dpi=150,
 ):
-    """
-    Produces the same plots as before, but ALSO saves them to disk (plot_png).
-    This is required for headless execution (e.g., Nextflow), where plt.show()
-    will not display a GUI window.
-    """
     d = df.copy()
 
     if clip_len is None:
         clip_len = int(np.percentile(d["length_bp"], 99))
-
     d["length_clipped"] = d["length_bp"].clip(upper=clip_len)
 
     if use_log_len:
@@ -122,82 +123,67 @@ def plot_distributions(
         xlab = "Read length (bp)"
         title_len = "Read length (linear)"
 
-    fig, ax = plt.subplots(1, 3, figsize=(16, 4.5))
+    summary = build_summary(d).round(3)
 
-    # GC content
-    ax[0].hist(
-        d["gc_percent"],
-        bins=bins_gc,
-        color=COLORS["gc"],
-        edgecolor="white",
-        alpha=0.85,
-    )
-    ax[0].set_title("GC content (%)", color=COLORS["gc"])
-    ax[0].set_xlabel("GC %")
-    ax[0].set_ylabel("Count")
+    fig = plt.figure(figsize=(16, 6.3), dpi=dpi)
+    gs = gridspec.GridSpec(2, 3, height_ratios=[1.15, 4.0])
 
-    # Read length
-    ax[1].hist(
-        x_len,
-        bins=bins_len,
-        color=COLORS["len"],
-        edgecolor="white",
-        alpha=0.85,
+    ax_top = fig.add_subplot(gs[0, :])
+    ax_top.axis("off")
+    ax_top.text(
+        0,
+        1,
+        "=== Summary statistics ===\n" + summary.to_string(),
+        family="monospace",
+        fontsize=11,
+        va="top",
     )
-    ax[1].set_title(title_len, color=COLORS["len"])
-    ax[1].set_xlabel(xlab)
-    ax[1].set_ylabel("Count")
 
-    # Mean quality
-    ax[2].hist(
-        d["mean_q"],
-        bins=bins_q,
-        color=COLORS["q"],
-        edgecolor="white",
-        alpha=0.85,
-    )
-    ax[2].set_title("Mean read quality (Q)", color=COLORS["q"])
-    ax[2].set_xlabel("Mean Q")
-    ax[2].set_ylabel("Count")
+    ax0 = fig.add_subplot(gs[1, 0])
+    ax1 = fig.add_subplot(gs[1, 1])
+    ax2 = fig.add_subplot(gs[1, 2])
+
+    ax0.hist(d["gc_percent"], bins=bins_gc, color=COLORS["gc"], alpha=0.85)
+    ax0.set_title("GC content (%)", color=COLORS["gc"])
+    ax0.set_xlabel("GC %")
+    ax0.set_ylabel("Count")
+
+    ax1.hist(x_len, bins=bins_len, color=COLORS["len"], alpha=0.85)
+    ax1.set_title(title_len, color=COLORS["len"])
+    ax1.set_xlabel(xlab)
+    ax1.set_ylabel("Count")
+
+    ax2.hist(d["mean_q"], bins=bins_q, color=COLORS["q"], alpha=0.85)
+    ax2.set_title("Mean read quality (Q)", color=COLORS["q"])
+    ax2.set_xlabel("Mean Q")
+    ax2.set_ylabel("Count")
 
     fig.suptitle(
         f"Distributions (n={len(d):,}) — length clipped at {clip_len:,} bp",
-        y=1.03,
-        fontsize=12,
+        y=0.98,
     )
 
-    plt.tight_layout()
-
-    # NEW: save plot for Nextflow/headless runs
-    plt.savefig(plot_png, dpi=dpi)
+    plt.savefig(plot_png, bbox_inches="tight")
     print(f"✔ Plot saved: {plot_png}")
-
-    # Keep this to preserve your original behavior in interactive runs
     plt.show()
 
 
 # -----------------------------
-# MAIN PIPELINE
+# MAIN
 # -----------------------------
 def main():
-    p = argparse.ArgumentParser(description="Custom FASTQ QC metrics + plots")
-    p.add_argument("--input", required=True, help="Input FASTQ/FASTQ.GZ")
-    p.add_argument("--out_csv", default="read_metrics.csv", help="Output CSV name/path")
-    p.add_argument(
-        "--plot_png",
-        default="custom_qc_histograms.png",
-        help="Output PNG for histogram figure (saved to disk)",
-    )
+    p = argparse.ArgumentParser()
+    p.add_argument("--input", required=True)
+    p.add_argument("--out_csv", required=True)
+    p.add_argument("--plot_png", required=True)
     args = p.parse_args()
 
-    fastq_file = Path(args.input)
-    out_csv = Path(args.out_csv)
+    df = parse_fastq(Path(args.input))
+    df.to_csv(args.out_csv, index=False)
+    print(f"✔ Finished! Written: {args.out_csv}")
 
-    df = parse_fastq(fastq_file)
-    save_metrics(df, out_csv)
     print_summary(df)
-
-    plot_distributions(df, plot_png=args.plot_png)
+    plot_distributions(df, plot_png=Path(args.plot_png))
 
 
 if __name__ == "__main__":
