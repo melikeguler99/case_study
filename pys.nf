@@ -1,95 +1,90 @@
-#!/usr/bin/env nextflow
 nextflow.enable.dsl=2
 
-params.fastq_dir = params.fastq_dir ?: "$projectDir/data"
-params.out_dir   = params.out_dir   ?: "$projectDir/outputs"
+params.fastq_dir = params.fastq_dir ?: "${projectDir}/data"
+params.out_dir   = params.out_dir   ?: "${projectDir}/results"
 
 workflow {
 
-    Channel.fromPath("${params.fastq_dir}/*.{fastq,fq,fastq.gz,fq.gz}", checkIfExists: true)
+    Channel
+        .fromPath("${params.fastq_dir}/*.{fastq,fq,fastq.gz,fq.gz}", checkIfExists: true)
         .map { f ->
             def name = f.getBaseName()
-            name = name.replaceFirst(/(\.fastq|\.fq)(\.gz)?$/, '')
-            tuple(f, name)
+            // handle .fastq.gz / .fq.gz
+            if (name.endsWith(".fastq")) name = name[0..-6]
+            if (name.endsWith(".fq"))    name = name[0..-4]
+            tuple(name, f)
         }
-        .set { fastq_ch }
+        .set { ch_reads }
 
-    nanoqc(fastq_ch)
-    nanoplot(fastq_ch)
-    readStats(fastq_ch)
-    readStatsViz(readStats.out)
+    ADVANCED_QC(ch_reads)
+    CUSTOM_QC(ch_reads)
 }
 
-/*
- * NanoQC
- */
-process nanoqc {
-    tag "$name"
+process ADVANCED_QC {
+
+    tag "${sample_id}"
+    publishDir "${params.out_dir}/${sample_id}", mode: 'copy', overwrite: true
 
     input:
-    tuple path(fastq), val(name)
+    tuple val(sample_id), path(fastq)
 
     output:
-    path "${name}_nanoqc", emit: out
+    path "nanoqc",   optional: true
+    path "nanoplot", optional: true
+
+    /*
+      We create exactly:
+        nanoqc/   (NanoQC output)
+        nanoplot/ (NanoPlot output)
+      and publish them into: results/<sample_id>/
+    */
 
     script:
     """
-    mkdir ${name}_nanoqc
-    nanoQC -o ${name}_nanoqc ${fastq}
+    set -euo pipefail
+
+    mkdir -p nanoqc nanoplot
+
+    echo "=== Processing ${sample_id} (ADVANCED_QC) ==="
+
+    echo "🧪 Running NanoQC..."
+    python ${projectDir}/scripts/advanced_qc.py \\
+      --fastq "${fastq}" \\
+      --nanoqc_dir "nanoqc" \\
+      --nanoplot_dir "nanoplot"
+
+    echo "✔ Advanced QC finished for ${sample_id}"
     """
 }
 
-/*
- * NanoPlot
- */
-process nanoplot {
-    tag "$name"
+process CUSTOM_QC {
+
+    tag "${sample_id}"
+    publishDir "${params.out_dir}/${sample_id}", mode: 'copy', overwrite: true
 
     input:
-    tuple path(fastq), val(name)
+    tuple val(sample_id), path(fastq)
 
     output:
-    path "${name}_nanoplot", emit: out
+    path "read_metrics.csv"
+
+    /*
+      Output filename stays EXACTLY: read_metrics.csv
+      It will land in: results/<sample_id>/read_metrics.csv
+    */
+
+    env.MPLBACKEND = "Agg"
 
     script:
     """
-    mkdir ${name}_nanoplot
-    NanoPlot --fastq ${fastq} --outdir ${name}_nanoplot
-    """
-}
+    set -euo pipefail
 
-/*
- * Read stats
- */
-process readStats {
-    tag "$name"
+    echo "=== Processing ${sample_id} (CUSTOM_QC) ==="
 
-    input:
-    tuple path(fastq), val(name)
+    python ${projectDir}/scripts/custom_qc.py \\
+      --input "${fastq}" \\
+      --out_csv "read_metrics.csv"
 
-    output:
-    path "${name}_stats.txt", emit: out
-
-    script:
-    """
-    awk 'NR%4==2 { print length(\$0) }' ${fastq} > ${name}_stats.txt
-    """
-}
-
-/*
- * Stats visualization
- */
-process readStatsViz {
-    tag "plot"
-
-    input:
-    path stats
-
-    output:
-    path "stats_plot.png"
-
-    script:
-    """
-    python3 custom_plot.py ${stats} stats_plot.png
+    echo "✔ Custom QC finished for ${sample_id}"
     """
 }
