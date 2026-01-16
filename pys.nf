@@ -17,11 +17,13 @@ workflow {
 
     advancedQC(fastq_ch)
     customQC(fastq_ch)
-
 }
+
 process advancedQC {
     tag "${sample}"
     publishDir "${params.out_dir}/${sample}", mode: 'copy'
+
+    conda 'qc_env.yml'
 
     input:
     tuple val(sample), path(fastq)
@@ -45,9 +47,12 @@ EOF
     mv nanoqc nanoplot ./
     """
 }
+
 process customQC {
     tag "${sample}"
     publishDir "${params.out_dir}/${sample}", mode: 'copy'
+
+    conda 'qc_env.yml'
 
     input:
     tuple val(sample), path(fastq)
