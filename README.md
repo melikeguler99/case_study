@@ -86,10 +86,10 @@ cd case_study
 ```
 The important features are:
 
-`qcpipe.nf` contains the main nextflow script that calls all the processes in the workflow.
-`nextflow.config` contains default parameters to use in the pipeline.
-`modules/` contains individual process files for each step in the workflow.
-`config/` contains infrastructure-specific config files (currently only contains gadi.config)
+`qcpipe.nf` - contains the main nextflow script that calls all the processes in the workflow.
+`nextflow.config` - contains default parameters to use in the pipeline.
+`scripts/` - contains individual process files for each step in the workflow.
+`config/` - contains infrastructure-specific config files (currently only contains gadi.config)
 
 - Creta your personal data folder
 
@@ -176,20 +176,20 @@ Users on other operating systems may open the HTML files in any modern web brows
 ###  Configuration and Customization
 
 Default parameters are defined in nextflow.config:
+
 ```bash
 params.fastq_dir = 'data/'
 params.out_dir = 'results/'
 
 ```
 Users may override these parameters at runtime:
+
 ```bash
 nextflow run qcpipe.nf -with-conda \
   --fastq_dir <data_path> \
   --out_dir <results_folder>
 
 ```
-This design ensures portability across different projects and file systems.
-
 ---
 
 
