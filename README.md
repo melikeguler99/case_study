@@ -12,6 +12,10 @@ The pipeline runs:
 - **NanoPlot** – read length, quality, and yield visualizations
 - --custom apipe
 
+- Present QC for raw reads (nanoQC)
+- Plot QC (nanoplot)
+- Custom QC analysis for raw reads (summary statistics as csv file and histograms)
+
 All dependencies are handled via **Conda**, making the pipeline portable and easy to reproduce on different machines.
 
 ## Pipeline Workflow
