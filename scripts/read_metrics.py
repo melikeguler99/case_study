@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Part 1 — Read-level metrics from FASTQ -> CSV
+Read-level metrics 
 
 Calculates for each read:
   - GC content percentage
