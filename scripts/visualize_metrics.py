@@ -1,11 +1,9 @@
 #!/usr/bin/env python3
 """
-Part 2 — Visualization + summary stats from metrics CSV -> PNG
-
-Reads the CSV produced by Part 1 and:
+Visualization 
   - prints summary statistics (mean/std/median/min/max)
   - generates distribution plots for GC%, read length, mean Q
-  - saves a single PNG that includes the summary "printout" at the top
+  - saves a single PNG 
 """
 
 import argparse
@@ -17,7 +15,7 @@ import numpy as np
 import pandas as pd
 
 # -----------------------------
-# CONFIG / COLORS (same style as before)
+# CONFIG / COLORS
 # -----------------------------
 COLORS = {
     "gc": "#6C5CE7",
@@ -107,7 +105,6 @@ def plot_from_csv(
 
     summary = build_summary(d).round(3)
 
-    # ---- Figure layout: summary text on top, 3 histograms below ----
     fig = plt.figure(figsize=(16, 6.3), dpi=dpi)
     gs = gridspec.GridSpec(
         nrows=2,
@@ -161,8 +158,6 @@ def plot_from_csv(
 
     plt.savefig(plot_png, dpi=dpi, bbox_inches="tight")
     print(f"✔ Plot saved: {plot_png}")
-
-    # Keep interactive behavior (no-op in Nextflow with MPLBACKEND=Agg)
     plt.show()
 
 
