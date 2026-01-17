@@ -132,8 +132,8 @@ data/
       └── sample_id/
             ├── nanoplot/
             └── nanoqc/
-            ├── sample_id_custom_qc_histograms.png/
-            └── sample_id_read_metrics.csv/
+            ├── sample_id_custom_qc_histograms.png
+            └── sample_id_read_metrics.csv
 ```
 ---
 ### Output Description
