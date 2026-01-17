@@ -1,11 +1,36 @@
 # qcPipe for long reads
 
-While FastQC and MultiQC are great for short-read quality control,In case of long reads, we can check sequence quality with Nanoplot (De Coster et al. 2018). It provides basic statistics with nice plots for a fast quality control overview.
-The long reads generated from platforms such as Oxford Nanopore Technologies can be analysed with specific packages that can handle the long and variable nature of these reads. One such quality control tool, `Nanoplot`, is a popular method to generate high-quality plots that visualise long read quality and length. Nanoplot also provides a statistical summary document that outlines the key features of the dataset.
+While FastQC and MultiQC are great for short-read quality control,the long reads generated from platforms such as Oxford Nanopore Technologies can be analysed with specific packages that can handle the long and variable nature of these reads. One such quality control tool, `Nanoplot`(De Coster et al. 2018), is a popular method to generate high-quality plots that visualise long read quality and length. Nanoplot also provides a statistical summary document that outlines the key features of the dataset.
 
-qcPipe is a reproducible **Nextflow (DSL2)** pipeline designed to perform **basic quality control and visualization** of FASTQ files, particularly suited for **Oxford Nanopore sequencing data**.
+To assess sequencing quality using tools optimized for long-read technologies, the pipeline incorporates `NanoQC` and `NanoPlot`. These tools generate summary statistics, read-length distributions, yield plots, and interactive HTML reports.
 
-With qcpipe, users can easily assess whether their data is ready for analysis using advanced tools like nanplot/nanoqc and custom analytics by providing standard sequence file formats such as fastq and fastqz.
+Following execution, all output files produced by NanoQC and NanoPlot are automatically renamed to include the sample identifier (`sample_id`) as a filename prefix. This post-processing step ensures traceability and prevents filename collisions when aggregating results across multiple samples.
+
+### Custom QC Analysis for long reads 
+
+A custom Python script (read_metrics.py) was developed to compute read-level quality metrics directly from the FASTQ file. Using the Biopython library, each read was parsed and the following metrics were calculated:
+
+- GC content (%), computed as the proportion of guanine and cytosine bases relative to read length
+
+- Read length (bp), defined as the total number of bases per read
+
+- Mean read quality score, calculated as the average Phred quality score across all bases in a read
+
+The results were stored in a CSV file containing one row per read and the columns `read_id`, `length_bp`, `mean_q`, and `gc_percent`
+
+The visualization script calculates key summary statistics (mean, standard deviation, median, minimum, and maximum) for GC content, read length, and mean read quality score. These statistics are printed to standard output and also rendered directly into the final visualization image.
+
+Distribution plots were generated for each metric using histograms:
+
+- GC content distribution
+
+- Read-length distribution (log-transformed to account for long-read length variability)
+
+- Mean read quality score distribution
+
+All plots and summary statistics were combined into a single PNG file per sample. 
+
+qcPipe is a reproducible **Nextflow (DSL2)** pipeline designed to perform **basic quality control and visualization** of FASTQ files, particularly suited for **Oxford Nanopore sequencing data**.With qcpipe, users can easily assess whether their data is ready for analysis using advanced tools like nanplot/nanoqc and custom analytics by providing standard sequence file formats such as fastq and fastqz.
 
 The pipeline runs:
 - **NanoQC** – HTML-based quality summary for long reads
@@ -184,83 +209,4 @@ This design ensures portability across different projects and file systems.
 
 ---
 
-### Custom QC Analysis for long reads 
 
-This repository includes two simple Python scripts for basic quality analysis of FASTQ files in the `case_study/custom_python_scripts/.`
-They are designed for users who want a **transparent, script-based workflow** without relying on advanced QC tools.
-
-
-## Requirements for the Python Scripts
-
-To run the custom FASTQ analysis scripts, the following are required:
-
-- **Python 3.8 or newer**
-- **Required Python libraries:**
-  - `numpy`
-  - `pandas`
-  - `matplotlib`
-
-These libraries are used for numerical calculations, data handling, and plotting.
-
----
-
-### Optional (Recommended)
-
-- **gzip support** (built into Python) for reading `.fastq.gz` files
-- A UNIX-like environment (Linux or macOS) for easier command-line usage
-
----
-
-### Check Installation
-
-```bash
-python --version
-python -c "import numpy, pandas, matplotlib"
-```
----
-
-###  Read-Level Statistics
-
-The first script (`custom_script.py`) processes a FASTQ file and calculates the following **for each individual read**:
-
-- GC content percentage  
-- Read length  
-- Mean read quality score  
-
-The results are saved in a structured format (CSV) for downstream analysis.
-
-Run the script on a single FASTQ file:
-
-```bash
-python custom_script.py \
-  --input path/to/sample_id.fastq.gz \
-  --outdir results
-```
-The output file will be automatically named using the input filename (e.g.,barcode77.fastq.gz → barcode77_stats.csv) and saved in the specified output directory.
-
-To process multiple FASTQ files in a directory:
-```bash
-for fq in fastqz/*.fastq.gz; do
-  python custom_script.py --input "$fq" --outdir results
-done
-```
-**Output example:**
-- `SampleID`
-- `ReadLength`
-- `QualityScore`
-- `GC`
----
-###  Data Visualization
-
-The second script (`custom_script_vis.py`) uses the output file from first python script and generates distribution plots. 
-
-```bash
-python custom_script_vis.py \
-  --input results/sample_id_stats.csv \
-  --outdir figures
-```
-Output:
-```bash
-figures/sample_id_histograms.png
-```
-----
