@@ -137,9 +137,6 @@ data/
 ```
 ---
 ### Output Description
-
-The pipeline produces multiple outputs summarizing read-level quality and sequence composition metrics.
-
 * **NanoQC report**  
   An interactive HTML summary of sequencing quality metrics.
 
