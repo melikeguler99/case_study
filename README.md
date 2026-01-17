@@ -1,13 +1,16 @@
 # qcPipe for long reads
 
-The long reads generated from platforms such as Oxford Nanopore Technologies can be analysed with specific packages that can handle the long and variable nature of these reads. One such quality control tool, `Nanoplot`, is a popular method to generate high-quality plots that visualise long read quality and length. Nanoplot also provides a statistical summary document that outlines the key features of the dataset. Similarly, PycoQC is another tool designed specifically for Oxford Nanopore data that produces interactive and highly customisable quality control plots for long-read datasets. 
-To trim and filter long reads, Nanofilt (or its updated counterpart, Chopper) are helpful tools that can be run straight from the command line. 
+While FastQC and MultiQC are great for short-read quality control,In case of long reads, we can check sequence quality with Nanoplot (De Coster et al. 2018). It provides basic statistics with nice plots for a fast quality control overview.
+The long reads generated from platforms such as Oxford Nanopore Technologies can be analysed with specific packages that can handle the long and variable nature of these reads. One such quality control tool, `Nanoplot`, is a popular method to generate high-quality plots that visualise long read quality and length. Nanoplot also provides a statistical summary document that outlines the key features of the dataset.
 
 qcPipe is a reproducible **Nextflow (DSL2)** pipeline designed to perform **basic quality control and visualization** of FASTQ files, particularly suited for **Oxford Nanopore sequencing data**.
+
+With qcpipe, users can easily assess whether their data is ready for analysis using advanced tools like nanplot/nanoqc and custom analytics by providing standard sequence file formats such as fastq and fastqz.
 
 The pipeline runs:
 - **NanoQC** – HTML-based quality summary for long reads
 - **NanoPlot** – read length, quality, and yield visualizations
+- --custom apipe
 
 All dependencies are handled via **Conda**, making the pipeline portable and easy to reproduce on different machines.
 
@@ -23,7 +26,6 @@ All dependencies are handled via **Conda**, making the pipeline portable and eas
 - Automatic sample detection from FASTQ filenames
 - Per-sample output organization
 - Works with `.fastq` and `.fastq.gz`
-- Suitable for local execution and teaching / case studies
 - Compatible with macOS and Linux
 
 ---
