@@ -166,8 +166,9 @@ All plots and summary statistics were combined into a single PNG file per sample
 
 On macOS systems, reports can be opened directly from the terminal:
 ```bash
-open data/results/*/nanoqc/*NanoQC*.html
-open data/results/*/nanoplot/NanoPlot-report.html
+open results
+open results/*/nanoplot/*NanoPlot-report*.html
+open results/*/nanoqc/*.html
 ```
 
 Users on other operating systems may open the HTML files in any modern web browser.
