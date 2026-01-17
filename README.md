@@ -136,36 +136,32 @@ data/
             └── sample_id_read_metrics.csv/
 ```
 ---
-
 ### Output Description
 
-* NanoQC report:
-An interactive HTML summary of read quality metrics.
+The pipeline produces multiple outputs summarizing read-level quality and sequence composition metrics.
 
-* NanoPlot report:
-A comprehensive visualization suite including read length distributions, quality vs length plots, and yield statistics.
+* **NanoQC report**  
+  An interactive HTML summary of sequencing quality metrics.
 
-* CSV file:
-  
-- GC content (%), computed as the proportion of guanine and cytosine bases relative to read length
+* **NanoPlot report**  
+  A comprehensive visualization suite including read length distributions, quality vs. length plots, and overall yield statistics.
 
-- Read length (bp), defined as the total number of bases per read
+* **CSV file**  
+  Per-read metrics are computed and written to a CSV file, including:
+  - **GC content (%)** — proportion of G and C bases relative to read length  
+  - **Read length (bp)** — total number of bases per read  
+  - **Mean read quality score** — average Phred score across bases  
 
-- Mean read quality score, calculated as the average Phred quality score across all bases in a read
+  The CSV contains one row per read with the following columns:  
+  `read_id`, `length_bp`, `mean_q`, `gc_percent`
 
-The results were stored in a CSV file containing one row per read and the columns `read_id`, `length_bp`, `mean_q`, and `gc_percent`
+* **PNG files**  
+  Distribution plots are generated as histograms for each metric:
+  - GC content distribution  
+  - Read-length distribution (log-transformed to accommodate long-read variability)  
+  - Mean read quality score distribution  
 
-* PNG files:
-  
-Distribution plots were generated for each metric using histograms:
-
-- GC content distribution
-
-- Read-length distribution (log-transformed to account for long-read length variability)
-
-- Mean read quality score distribution
-
-All plots and summary statistics were combined into a single PNG file per sample. 
+All plots and summary statistics were combined into a single PNG file per sample.
 
 ---
 
