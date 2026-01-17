@@ -1,10 +1,14 @@
 # qcPipe for long reads
 
-While FastQC and MultiQC are great for short-read quality control,the long reads generated from platforms such as Oxford Nanopore Technologies can be analysed with specific packages that can handle the long and variable nature of these reads. To assess sequencing quality using tools optimized for long-read technologies, the pipeline incorporates `NanoQC` and `NanoPlot`. These tools generate summary statistics, read-length distributions, yield plots, and interactive HTML reports.In addition to this, custom Python scripts was developed to compute read-level quality metrics directly from  file formats such as fastq and fastqz and calculates key summary statistics (mean, standard deviation, median, minimum, and maximum) for GC content, read length, and mean read quality score. These statistics are printed to standard output and also rendered directly into the final visualization image.
+While FastQC and MultiQC are great for short-read quality control,the long reads generated from platforms such as Oxford Nanopore Technologies can be analysed with specific packages that can handle the long and variable nature of these reads. To address this, `qcpipe` integrates `NanoQC` and `NanoPlot`, providing long-read-aware summaries such as read-length distributions, yield plots, and interactive HTML reports.
+
+In addition to these tools, custom Python scripts compute per-read quality metrics directly from FASTQ/FASTQ.GZ files and calculate key summary statistics (mean, median, standard deviation, minimum, and maximum) for GC content, read length, and mean read quality score. These statistics are printed to standard output and embedded directly into the final visualization image.
+
 Following execution, all output files produced by qcpipe are automatically renamed to include the sample identifier (`sample_id`) as a filename prefix. This post-processing step ensures traceability and prevents filename collisions when aggregating results across multiple samples.
 
+# Pipeline Description
 
-qcPipe is a reproducible **Nextflow (DSL2)** pipeline designed to perform **basic quality control and visualization** of FASTQ files.With qcpipe, users can easily assess whether their data is ready for analysis using advanced tools like nanplot/nanoqc and custom analytics by providing standard sequence file formats such as fastq and fastqz.
+`qcpipe` is a reproducible Nextflow DSL2 pipeline for basic quality control and visualization of long-read sequencing data. The workflow allows users to quickly assess whether `.fastq` and `.fastq.gz` is suitable for downstream analysis using both standardized QC tools and custom analytics.
 
 The pipeline runs:
 - **NanoQC** – HTML-based quality summary for long reads
@@ -25,19 +29,7 @@ All dependencies are handled via **Conda**, making the pipeline portable and eas
 
 ---
 
-##  Features
-
-- Fully reproducible workflow using **Nextflow + Conda**
-- Automatic sample detection from FASTQ filenames
-- Per-sample output organization
-- Works with `.fastq` and `.fastq.gz`
-- Compatible with macOS and Linux
-
----
-
 ## Requirements
-
-### Software
 
 To run NanoPipe, the following are required:
 
@@ -57,7 +49,7 @@ conda --version
 ```
 ---
 ### User guide
-
+---
 
 ###  Input Data
 
