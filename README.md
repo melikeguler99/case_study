@@ -8,27 +8,7 @@ Following execution, all output files produced by NanoQC and NanoPlot are automa
 
 ### Custom QC Analysis for long reads 
 
-A custom Python script (read_metrics.py) was developed to compute read-level quality metrics directly from the FASTQ file. Using the Biopython library, each read was parsed and the following metrics were calculated:
-
-- GC content (%), computed as the proportion of guanine and cytosine bases relative to read length
-
-- Read length (bp), defined as the total number of bases per read
-
-- Mean read quality score, calculated as the average Phred quality score across all bases in a read
-
-The results were stored in a CSV file containing one row per read and the columns `read_id`, `length_bp`, `mean_q`, and `gc_percent`
-
-The visualization script calculates key summary statistics (mean, standard deviation, median, minimum, and maximum) for GC content, read length, and mean read quality score. These statistics are printed to standard output and also rendered directly into the final visualization image.
-
-Distribution plots were generated for each metric using histograms:
-
-- GC content distribution
-
-- Read-length distribution (log-transformed to account for long-read length variability)
-
-- Mean read quality score distribution
-
-All plots and summary statistics were combined into a single PNG file per sample. 
+A custom Python scripts was developed to compute read-level quality metrics directly from the FASTQ file and calculates key summary statistics (mean, standard deviation, median, minimum, and maximum) for GC content, read length, and mean read quality score. These statistics are printed to standard output and also rendered directly into the final visualization image.
 
 qcPipe is a reproducible **Nextflow (DSL2)** pipeline designed to perform **basic quality control and visualization** of FASTQ files, particularly suited for **Oxford Nanopore sequencing data**.With qcpipe, users can easily assess whether their data is ready for analysis using advanced tools like nanplot/nanoqc and custom analytics by providing standard sequence file formats such as fastq and fastqz.
 
@@ -80,6 +60,8 @@ nextflow -version
 conda --version
 ```
 ---
+### User guide
+
 
 ###  Input Data
 
@@ -120,6 +102,12 @@ This allows the pipeline to scale seamlessly to multiple samples without manual 
 git clone https://github.com/melikeguler99/case_study.git
 cd case_study
 ```
+The important features are:
+
+`main.nf` contains the main nextflow script that calls all the processes in the workflow.
+`nextflow.config` contains default parameters to use in the pipeline.
+`modules/` contains individual process files for each step in the workflow.
+`config/` contains infrastructure-specific config files (currently only contains gadi.config)
 
 - Creta your personal data folder
 
@@ -131,8 +119,6 @@ mkdir -p data
 ```bash
 cp <data_path> data/
 ```
-
-The pipeline is executed locally using Nextflow.
 
 ## Standard Execution
 ```bash
@@ -164,6 +150,8 @@ data/
       └── sample_id/
             ├── nanoplot/
             └── nanoqc/
+            ├── sample_id_custom_qc_histograms.png/
+            └── sample_id_read_metrics.csv/
 ```
 ---
 
@@ -175,8 +163,26 @@ An interactive HTML summary of read quality metrics.
 * NanoPlot report:
 A comprehensive visualization suite including read length distributions, quality vs length plots, and yield statistics.
 
+* CSV file:
+- GC content (%), computed as the proportion of guanine and cytosine bases relative to read length
+
+- Read length (bp), defined as the total number of bases per read
+
+- Mean read quality score, calculated as the average Phred quality score across all bases in a read
+
+The results were stored in a CSV file containing one row per read and the columns `read_id`, `length_bp`, `mean_q`, and `gc_percent`
+
 * PNG files:
-High-resolution static plots suitable for reports and presentations.
+  
+Distribution plots were generated for each metric using histograms:
+
+- GC content distribution
+
+- Read-length distribution (log-transformed to account for long-read length variability)
+
+- Mean read quality score distribution
+
+All plots and summary statistics were combined into a single PNG file per sample. 
 
 ---
 
