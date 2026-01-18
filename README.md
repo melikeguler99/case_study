@@ -2,7 +2,7 @@
 
 While FastQC and MultiQC are great for short-read quality control,the long reads generated from platforms such as Oxford Nanopore Technologies can be analysed with specific packages that can handle the long and variable nature of these reads. To address this, `qcPipe` integrates `NanoQC` and `NanoPlot`, providing long-read-aware summaries such as read-length distributions, yield plots, and interactive HTML reports.
 
-In addition to these tools, custom Python scripts compute per-read quality metrics directly from FASTQ/FASTQ.GZ files and calculate key summary statistics (mean, median, standard deviation, minimum, and maximum) for GC content, read length, and mean read quality score. These statistics are printed to standard output and embedded directly into the final visualization image.
+In addition to these tools, custom Python scripts compute per-read quality metrics directly from `.fastq`/`.fastq.gz` files and calculate key summary statistics (mean, median, standard deviation, minimum, and maximum) for GC content, read length, and mean read quality score. These statistics are printed to standard output and embedded directly into the final visualization image.
 
 Following execution, all output files produced by qcPipe are automatically renamed to include the sample identifier (`sample_id`) as a filename prefix. This post-processing step ensures traceability and prevents filename collisions when aggregating results across multiple samples.
 
@@ -76,9 +76,9 @@ cd case_study
 ```
 The important features are:
 
- -`qcPipe.nf` – contains the main Nextflow script that calls all processes in the workflow.
- -`nextflow.config` – contains default parameters used by the pipeline.
- -`scripts/` – contains Python scripts called by the workflow processes.
+ - `qcPipe.nf` – contains the main Nextflow script that calls all processes in the workflow.
+ - `nextflow.config` – contains default parameters used by the pipeline.
+ - `scripts/` – contains Python scripts called by the workflow processes.
 
 - Creta your personal data folder
 
