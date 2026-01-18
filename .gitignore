@@ -10,8 +10,6 @@ data/
 results/
 *.fastq
 *.fastq.gz
-*.fq
-*.fq.gz
 
 # Conda / envs
 .env/
