@@ -31,7 +31,7 @@ All dependencies are handled via **Conda**, making the pipeline portable and eas
 
 ## Requirements
 
-To run NanoPipe, the following are required:
+To run  qcpipe, the following are required:
 
 - **Java (JDK ≥ 11)**  
 - **Nextflow**  
