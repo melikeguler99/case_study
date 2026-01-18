@@ -1,14 +1,8 @@
-# qcPipe for long reads
-
-While FastQC and MultiQC are great for short-read quality control,the long reads generated from platforms such as Oxford Nanopore Technologies can be analysed with specific packages that can handle the long and variable nature of these reads. To address this, `qcPipe` integrates `NanoQC` and `NanoPlot`, providing long-read-aware summaries such as read-length distributions, yield plots, and interactive HTML reports.
-
-In addition to these tools, custom Python scripts compute per-read quality metrics directly from `.fastq`/`.fastq.gz` files and calculate key summary statistics (mean, median, standard deviation, minimum, and maximum) for GC content, read length, and mean read quality score. These statistics are printed to standard output and embedded directly into the final visualization image.
-
-Following execution, all output files produced by qcPipe are automatically renamed to include the sample identifier (`sample_id`) as a filename prefix. This post-processing step ensures traceability and prevents filename collisions when aggregating results across multiple samples.
-
-# Introduction
+# qcPipe for raw long-read data
 
 `qcPipe` is a reproducible Nextflow DSL2 pipeline for basic quality control and visualization of long-read sequencing data. The workflow allows users to quickly assess whether `.fastq`and `.fastq.gz` is suitable for downstream analysis using both standardized QC tools and custom analytics.
+
+While FastQC and MultiQC are great for short-read quality control,the long reads generated from platforms such as Oxford Nanopore Technologies can be analysed with specific packages that can handle the long and variable nature of these reads. To address this, `qcPipe` integrates `NanoQC` and `NanoPlot`, providing long-read-aware summaries such as read-length distributions, yield plots, and interactive HTML reports.In addition to these tools, custom Python scripts compute per-read quality metrics directly from `.fastq`/`.fastq.gz` files and calculate key summary statistics (mean, median, standard deviation, minimum, and maximum) for GC content, read length, and mean read quality score. These statistics are printed to standard output and embedded directly into the final visualization image.
 
 The pipeline runs:
 - **NanoQC** – HTML-based quality summary for long reads
@@ -45,8 +39,8 @@ java -version
 nextflow -version
 conda --version
 ```
----
-# User guide
+
+# **User guide**
 
 #  1. Input Data
 
@@ -111,7 +105,7 @@ nextflow run qcPipe.nf -with-conda -resume
 
 ## 3.1 Output Structure
 
-All results are organized per sample, ensuring clarity and traceability.
+Following execution, all output files produced by qcPipe are automatically renamed to include the sample identifier (`sample_id`) as a filename prefix. This post-processing step ensures traceability and prevents filename collisions when aggregating results across multiple samples.
 
 ```bash
 results/
