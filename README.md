@@ -58,7 +58,9 @@ Supported file extensions:
 
 Input files must be placed in the directory specified by the parameter:
 
-`params.fastq_dir (default: data/)`
+```bash
+params.fastq_dir (default: data/)
+```
 
 By default, the pipeline searches for:
 ```bash
@@ -74,14 +76,13 @@ data/*.{fastq,fastq.gz}
 git clone https://github.com/melikeguler99/case_study.git
 cd case_study
 ```
-The important features are:
+> The important features are:
 
- - `qcPipe.nf` – contains the main Nextflow script that calls all processes in the workflow.
- - `nextflow.config` – contains default parameters used by the pipeline.
- - `scripts/` – contains Python scripts called by the workflow processes.
+> - `qcPipe.nf` – contains the main Nextflow script that calls all processes in the workflow.
+> - `nextflow.config` – contains default parameters used by the pipeline.
+> - `scripts/` – contains Python scripts called by the workflow processes.
 
 - 2.1.2. Creta your personal data folder
-
 ```bash
 mkdir -p data
 
