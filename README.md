@@ -8,7 +8,7 @@ Following execution, all output files produced by qcpipe are automatically renam
 
 # Pipeline Description
 
-`qcpipe` is a reproducible Nextflow DSL2 pipeline for basic quality control and visualization of long-read sequencing data. The workflow allows users to quickly assess whether `.fastq` and `.fastq.gz` is suitable for downstream analysis using both standardized QC tools and custom analytics.
+`qcpipe` is a reproducible Nextflow DSL2 pipeline for basic quality control and visualization of long-read sequencing data. The workflow allows users to quickly assess whether `.fastq`,`.fastq.gz`,`.fq`, `.fq.gz` is suitable for downstream analysis using both standardized QC tools and custom analytics.
 
 The pipeline runs:
 - **NanoQC** – HTML-based quality summary for long reads
@@ -28,7 +28,6 @@ All dependencies are handled via **Conda**, making the pipeline portable and eas
 ![NanoPipe pipeline workflow](https://github.com/melikeguler99/case_study/blob/main/Pipeline_workflow.jpg)
 
 ---
-
 ## Requirements
 
 To run  qcpipe, the following are required:
@@ -49,7 +48,6 @@ conda --version
 ```
 ---
 ### User guide
----
 
 ###  Input Data
 
@@ -57,15 +55,15 @@ The pipeline processes single-end FASTQ files, including both uncompressed and g
 
 Supported file extensions:
 
-`.fastq` and`.fastq.gz`
+`.fastq`,`.fastq.gz`,`.fq`, `.fq.gz`
 
 Input files must be placed in the directory specified by the parameter:
 
-params.fastq_dir (default: data/)
+`params.fastq_dir (default: data/)`
 
 By default, the pipeline searches for:
 ```bash
-data/*.fastq*
+data/*.{fastq,fq,fastq.gz,fq.gz}
 ```
 ---
 
@@ -80,8 +78,7 @@ The important features are:
 
 `qcpipe.nf` - contains the main nextflow script that calls all the processes in the workflow.
 `nextflow.config` - contains default parameters to use in the pipeline.
-`scripts/` - contains individual process files for each step in the workflow.
-`config/` - contains infrastructure-specific config files (currently only contains gadi.config)
+`scripts/` - contains Python scripts called by processes.
 
 - Creta your personal data folder
 
@@ -119,13 +116,17 @@ The environment is cached and reused for subsequent runs.
 
 All results are organized per sample, ensuring clarity and traceability.
 ```bash
-data/
- └── results/
-      └── sample_id/
-            ├── nanoplot/
-            └── nanoqc/
-            ├── sample_id_custom_qc_histograms.png
-            └── sample_id_read_metrics.csv
+results/
+ └── sample_id/
+      ├── nanoplot/
+      │    ├── sample_id_NanoPlot-report.html
+      │    ├── sample_id_NanoStats.txt
+      │    └── sample_id_*.png / sample_id_*.html
+      ├── nanoqc/
+      │    └── sample_id_*.html (and other NanoQC outputs)
+      ├── sample_id_read_metrics.csv
+      └── sample_id_custom_qc_histograms.png
+
 ```
 ---
 ### Output Description
@@ -151,19 +152,7 @@ data/
   - Mean read quality score distribution  
 
 All plots and summary statistics were combined into a single PNG file per sample.
-
 ---
-
-###  Viewing Results
-
-On macOS systems, reports can be opened directly from the terminal:
-```bash
-open results
-open results/*/nanoplot/*NanoPlot-report*.html
-open results/*/nanoqc/*.html
-```
-
-Users on other operating systems may open the HTML files in any modern web browser.
 
 ###  Configuration and Customization
 
@@ -172,16 +161,12 @@ Default parameters are defined in nextflow.config:
 ```bash
 params.fastq_dir = 'data/'
 params.out_dir = 'results/'
-
 ```
 Users may override these parameters at runtime:
 
 ```bash
 nextflow run qcpipe.nf -with-conda \
   --fastq_dir <data_path> \
-  --out_dir <results_folder>
+  --out_dir   <results_folder>
 
 ```
----
-
-
