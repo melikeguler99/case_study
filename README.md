@@ -67,7 +67,7 @@ data/*.{fastq,fastq.gz}
 ```
 
 ###  2. Running the Pipeline
----
+
 ## 2.1 Repository Setup
 
 - First clone this repo
