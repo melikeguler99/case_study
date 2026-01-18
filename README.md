@@ -77,9 +77,9 @@ cd case_study
 ```
 The important features are:
 
-- `qcPipe.nf` – contains the main Nextflow script that calls all processes in the workflow.
-- `nextflow.config` – contains default parameters used by the pipeline.
-- `scripts/` – contains Python scripts called by the workflow processes.
+`qcPipe.nf` – contains the main Nextflow script that calls all processes in the workflow.
+`nextflow.config` – contains default parameters used by the pipeline.
+`scripts/` – contains Python scripts called by the workflow processes.
 
 - Creta your personal data folder
 
@@ -96,6 +96,9 @@ cp <data_path> data/
 ```bash
 nextflow run qcPipe.nf -with-conda
 ```
+On the first run, Nextflow will create a Conda environment based on env.yml.
+This may take several minutes depending on network speed and solver configuration.
+The environment is cached and reused for subsequent runs.
 
 ## 2.3 Resume Execution
 
@@ -104,12 +107,6 @@ To reuse previously completed steps (recommended during development or re-analys
 ```bash
 nextflow run qcPipe.nf -with-conda -resume
 ```
-
-## 2.4 First-Run Behavior
-
-On the first run, Nextflow will create a Conda environment based on env.yml.
-This may take several minutes depending on network speed and solver configuration.
-The environment is cached and reused for subsequent runs.
 
 # 3. Results 
 
