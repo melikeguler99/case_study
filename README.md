@@ -111,8 +111,6 @@ On the first run, Nextflow will create a Conda environment based on env.yml.
 This may take several minutes depending on network speed and solver configuration.
 The environment is cached and reused for subsequent runs.
 
----
-
 ### 3. Results 
 
 ## 3.1 Output Structure
