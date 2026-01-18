@@ -4,7 +4,7 @@ While FastQC and MultiQC are great for short-read quality control,the long reads
 
 In addition to these tools, custom Python scripts compute per-read quality metrics directly from FASTQ/FASTQ.GZ files and calculate key summary statistics (mean, median, standard deviation, minimum, and maximum) for GC content, read length, and mean read quality score. These statistics are printed to standard output and embedded directly into the final visualization image.
 
-Following execution, all output files produced by qcpipe are automatically renamed to include the sample identifier (`sample_id`) as a filename prefix. This post-processing step ensures traceability and prevents filename collisions when aggregating results across multiple samples.
+Following execution, all output files produced by qcPipe are automatically renamed to include the sample identifier (`sample_id`) as a filename prefix. This post-processing step ensures traceability and prevents filename collisions when aggregating results across multiple samples.
 
 # Introduction
 
