@@ -8,7 +8,7 @@ Following execution, all output files produced by qcpipe are automatically renam
 
 # Introduction
 
-`qcpipe` is a reproducible Nextflow DSL2 pipeline for basic quality control and visualization of long-read sequencing data. The workflow allows users to quickly assess whether `.fastq`,`.fastq.gz`,`.fq`, `.fq.gz` is suitable for downstream analysis using both standardized QC tools and custom analytics.
+`qcpipe` is a reproducible Nextflow DSL2 pipeline for basic quality control and visualization of long-read sequencing data. The workflow allows users to quickly assess whether `.fastq`and `.fastq.gz` is suitable for downstream analysis using both standardized QC tools and custom analytics.
 
 The pipeline runs:
 - **NanoQC** – HTML-based quality summary for long reads
@@ -55,7 +55,7 @@ The pipeline processes single-end FASTQ files, including both uncompressed and g
 
 Supported file extensions:
 
-`.fastq`,`.fastq.gz`,`.fq`, `.fq.gz`
+`.fastq` and `.fastq.gz`
 
 Input files must be placed in the directory specified by the parameter:
 
@@ -63,7 +63,7 @@ Input files must be placed in the directory specified by the parameter:
 
 By default, the pipeline searches for:
 ```bash
-data/*.{fastq,fq,fastq.gz,fq.gz}
+data/*.{fastq,.fastq.gz}
 ```
 
 ###  2. Running the Pipeline
