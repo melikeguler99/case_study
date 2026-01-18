@@ -48,9 +48,9 @@ conda --version
 ```
 ---
 # User guide
-
+---
 ###  1. Input Data
-
+---
 The pipeline processes single-end FASTQ files, including both uncompressed and gzip-compressed formats.
 
 Supported file extensions:
@@ -65,9 +65,9 @@ By default, the pipeline searches for:
 ```bash
 data/*.{fastq,fastq.gz}
 ```
-
+---
 ###  2. Running the Pipeline
-
+---
 ## 2.1 Repository Setup
 
 - First clone this repo
@@ -114,7 +114,7 @@ The environment is cached and reused for subsequent runs.
 ---
 
 ### 3. Results 
-
+---
 ## 3.1 Output Structure
 
 All results are organized per sample, ensuring clarity and traceability.
@@ -132,7 +132,6 @@ results/
       └── sample_id_custom_qc_histograms.png
 
 ```
----
 ## 3.2 Output Description
 * **NanoQC report**  
   An interactive HTML summary of sequencing quality metrics.
@@ -156,7 +155,7 @@ results/
   - Mean read quality score distribution  
 
 All plots and summary statistics were combined into a single PNG file per sample.
-
+---
 ### 4. Configuration and Customization
 
 Default parameters are defined in nextflow.config:
