@@ -63,10 +63,12 @@ Input files must be placed in the directory specified by the parameter:
 
 By default, the pipeline searches for:
 ```bash
-data/*.{fastq,.fastq.gz}
+data/*.{fastq,fastq.gz}
 ```
 
 ###  2. Running the Pipeline
+
+# 2.1 Repository Setup
 
 - First clone this repo
 ```bash
@@ -90,12 +92,12 @@ mkdir -p data
 cp <data_path> data/
 ```
 
-## Standard Execution
+# 2.2 Standard Execution
 ```bash
 nextflow run qcpipe.nf -with-conda
 ```
 
-## Resume Execution
+## 2.3 Resume Execution
 
 To reuse previously completed steps (recommended during development or re-analysis):
 
@@ -103,7 +105,7 @@ To reuse previously completed steps (recommended during development or re-analys
 nextflow run qcpipe.nf -with-conda -resume
 ```
 
-## First-Run Behavior
+## 2.4 First-Run Behavior
 
 On the first run, Nextflow will create a Conda environment based on env.yml.
 This may take several minutes depending on network speed and solver configuration.
@@ -123,7 +125,7 @@ results/
       │    ├── sample_id_NanoStats.txt
       │    └── sample_id_*.png / sample_id_*.html
       ├── nanoqc/
-      │    └── sample_id_*.html (and other NanoQC outputs)
+      │    └── sample_id_*.html
       ├── sample_id_read_metrics.csv
       └── sample_id_custom_qc_histograms.png
 
