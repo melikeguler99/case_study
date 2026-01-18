@@ -69,7 +69,7 @@ data/*.{fastq,fastq.gz}
 
 ## 2.1 Repository Setup
 
-- First clone this repo
+- 2.1.1. First clone this repo
 ```bash
 git clone https://github.com/melikeguler99/case_study.git
 cd case_study
@@ -80,7 +80,7 @@ The important features are:
  - `nextflow.config` – contains default parameters used by the pipeline.
  - `scripts/` – contains Python scripts called by the workflow processes.
 
-- Creta your personal data folder
+- 2.1.2. Creta your personal data folder
 
 ```bash
 mkdir -p data
