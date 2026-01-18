@@ -25,7 +25,7 @@ All dependencies are handled via **Conda**, making the pipeline portable and eas
 
 ## Pipeline Workflow
 
-![NanoPipe pipeline workflow](https://github.com/melikeguler99/case_study/blob/main/Pipeline_workflow.jpg)
+![NanoPipe pipeline workflow](https://github.com/melikeguler99/case_study/blob/main/Pipeline_workflow.png)
 
 ---
 ## Requirements
