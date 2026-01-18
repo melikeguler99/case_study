@@ -27,7 +27,6 @@ All dependencies are handled via **Conda**, making the pipeline portable and eas
 
 ![NanoPipe pipeline workflow](https://github.com/melikeguler99/case_study/blob/main/Pipeline_workflow.png)
 
----
 ## Requirements
 
 To run  qcpipe, the following are required:
