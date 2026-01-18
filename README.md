@@ -48,7 +48,7 @@ conda --version
 ```
 ---
 # User guide
----
+
 ###  1. Input Data
 
 The pipeline processes single-end FASTQ files, including both uncompressed and gzip-compressed formats.
@@ -65,7 +65,7 @@ By default, the pipeline searches for:
 ```bash
 data/*.{fastq,fastq.gz}
 ```
----
+
 ###  2. Running the Pipeline
 ---
 ## 2.1 Repository Setup
