@@ -76,20 +76,19 @@ def plot_from_csv(
 ):
     d = df.copy()
 
-    # Validate required columns
+
     required = {"gc_percent", "length_bp", "mean_q"}
     missing = required - set(d.columns)
     if missing:
         raise ValueError(f"Missing columns in CSV: {sorted(missing)}. Found: {list(d.columns)}")
-
-    # Ensure numeric
     for col in ["gc_percent", "length_bp", "mean_q"]:
         d[col] = pd.to_numeric(d[col], errors="coerce")
 
     d = d.dropna(subset=["gc_percent", "length_bp", "mean_q"])
     if len(d) == 0:
         raise ValueError("No valid rows after numeric conversion / NaN removal.")
-
+      
+ # Ignore the longest 1% of reads when plotting
     if clip_len is None:
         clip_len = int(np.percentile(d["length_bp"], 99))
     d["length_clipped"] = d["length_bp"].clip(upper=clip_len)
