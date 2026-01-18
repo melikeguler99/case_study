@@ -49,7 +49,7 @@ conda --version
 ---
 # User guide
 
-###  1. Input Data
+#  1. Input Data
 
 The pipeline processes single-end FASTQ files, including both uncompressed and gzip-compressed formats.
 
@@ -66,7 +66,7 @@ By default, the pipeline searches for:
 data/*.{fastq,fastq.gz}
 ```
 
-###  2. Running the Pipeline
+#  2. Running the Pipeline
 
 ## 2.1 Repository Setup
 
@@ -111,7 +111,7 @@ On the first run, Nextflow will create a Conda environment based on env.yml.
 This may take several minutes depending on network speed and solver configuration.
 The environment is cached and reused for subsequent runs.
 
-### 3. Results 
+# 3. Results 
 
 ## 3.1 Output Structure
 
@@ -154,7 +154,7 @@ results/
 
 All plots and summary statistics were combined into a single PNG file per sample.
 
-### 4. Configuration and Customization
+# 4. Configuration and Customization
 
 Default parameters are defined in nextflow.config:
 
