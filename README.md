@@ -6,7 +6,7 @@ In addition to these tools, custom Python scripts compute per-read quality metri
 
 Following execution, all output files produced by qcpipe are automatically renamed to include the sample identifier (`sample_id`) as a filename prefix. This post-processing step ensures traceability and prevents filename collisions when aggregating results across multiple samples.
 
-# Pipeline Description
+# Introduction
 
 `qcpipe` is a reproducible Nextflow DSL2 pipeline for basic quality control and visualization of long-read sequencing data. The workflow allows users to quickly assess whether `.fastq`,`.fastq.gz`,`.fq`, `.fq.gz` is suitable for downstream analysis using both standardized QC tools and custom analytics.
 
@@ -49,7 +49,7 @@ conda --version
 ---
 ### User guide
 
-###  Input Data
+###  1. Input Data
 
 The pipeline processes single-end FASTQ files, including both uncompressed and gzip-compressed formats.
 
@@ -65,9 +65,8 @@ By default, the pipeline searches for:
 ```bash
 data/*.{fastq,fq,fastq.gz,fq.gz}
 ```
----
 
-###  Running the Pipeline
+###  2. Running the Pipeline
 
 - First clone this repo
 ```bash
@@ -112,7 +111,7 @@ The environment is cached and reused for subsequent runs.
 
 ---
 
-###  Output Structure
+### 3. Output Structure
 
 All results are organized per sample, ensuring clarity and traceability.
 
@@ -155,7 +154,7 @@ results/
 All plots and summary statistics were combined into a single PNG file per sample.
 ---
 
-###  Configuration and Customization
+### 4. Configuration and Customization
 
 Default parameters are defined in nextflow.config:
 
