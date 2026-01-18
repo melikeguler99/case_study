@@ -77,9 +77,9 @@ cd case_study
 ```
 The important features are:
 
-`qcPipe.nf` – contains the main Nextflow script that calls all processes in the workflow.
-`nextflow.config` – contains default parameters used by the pipeline.
-`scripts/` – contains Python scripts called by the workflow processes.
+ -`qcPipe.nf` – contains the main Nextflow script that calls all processes in the workflow.
+ -`nextflow.config` – contains default parameters used by the pipeline.
+ -`scripts/` – contains Python scripts called by the workflow processes.
 
 - Creta your personal data folder
 
