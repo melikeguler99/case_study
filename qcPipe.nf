@@ -6,9 +6,9 @@ params.out_dir   = params.out_dir   ?: "${projectDir}/results"
 workflow {
 
     Channel
-        .fromPath("${params.fastq_dir}/*.{fastq,fq}", checkIfExists: true)
+        .fromPath("${params.fastq_dir}/*.{fastq,fastq.gz}", checkIfExists: true)
         .map { f ->
-            def sample_id = f.name.replaceFirst(/(\.fastq|\.fq)(\.gz)?$/, '')
+            def sample_id = f.name.replaceFirst(/(\.fastq)(\.gz)?$/, '')
             tuple(sample_id, f)
         }
         .set { ch_reads }
