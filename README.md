@@ -50,7 +50,7 @@ conda --version
 # User guide
 ---
 ###  1. Input Data
----
+
 The pipeline processes single-end FASTQ files, including both uncompressed and gzip-compressed formats.
 
 Supported file extensions:
@@ -114,7 +114,7 @@ The environment is cached and reused for subsequent runs.
 ---
 
 ### 3. Results 
----
+
 ## 3.1 Output Structure
 
 All results are organized per sample, ensuring clarity and traceability.
@@ -155,7 +155,7 @@ results/
   - Mean read quality score distribution  
 
 All plots and summary statistics were combined into a single PNG file per sample.
----
+
 ### 4. Configuration and Customization
 
 Default parameters are defined in nextflow.config:
