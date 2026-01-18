@@ -47,9 +47,9 @@ nextflow -version
 conda --version
 ```
 ---
-### User guide
+# User guide
 
-#  1. Input Data
+###  1. Input Data
 
 The pipeline processes single-end FASTQ files, including both uncompressed and gzip-compressed formats.
 
@@ -66,7 +66,7 @@ By default, the pipeline searches for:
 data/*.{fastq,fastq.gz}
 ```
 
-#  2. Running the Pipeline
+###  2. Running the Pipeline
 
 ## 2.1 Repository Setup
 
@@ -113,7 +113,7 @@ The environment is cached and reused for subsequent runs.
 
 ---
 
-# 3. Results 
+### 3. Results 
 
 ## 3.1 Output Structure
 
@@ -156,9 +156,8 @@ results/
   - Mean read quality score distribution  
 
 All plots and summary statistics were combined into a single PNG file per sample.
----
 
-# 4. Configuration and Customization
+### 4. Configuration and Customization
 
 Default parameters are defined in nextflow.config:
 
