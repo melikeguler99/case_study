@@ -1,6 +1,6 @@
 # qcPipe for long reads
 
-While FastQC and MultiQC are great for short-read quality control,the long reads generated from platforms such as Oxford Nanopore Technologies can be analysed with specific packages that can handle the long and variable nature of these reads. To address this, `qcpipe` integrates `NanoQC` and `NanoPlot`, providing long-read-aware summaries such as read-length distributions, yield plots, and interactive HTML reports.
+While FastQC and MultiQC are great for short-read quality control,the long reads generated from platforms such as Oxford Nanopore Technologies can be analysed with specific packages that can handle the long and variable nature of these reads. To address this, `qcPipe` integrates `NanoQC` and `NanoPlot`, providing long-read-aware summaries such as read-length distributions, yield plots, and interactive HTML reports.
 
 In addition to these tools, custom Python scripts compute per-read quality metrics directly from FASTQ/FASTQ.GZ files and calculate key summary statistics (mean, median, standard deviation, minimum, and maximum) for GC content, read length, and mean read quality score. These statistics are printed to standard output and embedded directly into the final visualization image.
 
@@ -8,7 +8,7 @@ Following execution, all output files produced by qcpipe are automatically renam
 
 # Introduction
 
-`qcpipe` is a reproducible Nextflow DSL2 pipeline for basic quality control and visualization of long-read sequencing data. The workflow allows users to quickly assess whether `.fastq`and `.fastq.gz` is suitable for downstream analysis using both standardized QC tools and custom analytics.
+`qcPipe` is a reproducible Nextflow DSL2 pipeline for basic quality control and visualization of long-read sequencing data. The workflow allows users to quickly assess whether `.fastq`and `.fastq.gz` is suitable for downstream analysis using both standardized QC tools and custom analytics.
 
 The pipeline runs:
 - **NanoQC** – HTML-based quality summary for long reads
@@ -77,7 +77,7 @@ cd case_study
 ```
 The important features are:
 
-- `qcpipe.nf` – contains the main Nextflow script that calls all processes in the workflow.
+- `qcPipe.nf` – contains the main Nextflow script that calls all processes in the workflow.
 - `nextflow.config` – contains default parameters used by the pipeline.
 - `scripts/` – contains Python scripts called by the workflow processes.
 
@@ -94,7 +94,7 @@ cp <data_path> data/
 
 ## 2.2 Standard Execution
 ```bash
-nextflow run qcpipe.nf -with-conda
+nextflow run qcPipe.nf -with-conda
 ```
 
 ## 2.3 Resume Execution
@@ -102,7 +102,7 @@ nextflow run qcpipe.nf -with-conda
 To reuse previously completed steps (recommended during development or re-analysis):
 
 ```bash
-nextflow run qcpipe.nf -with-conda -resume
+nextflow run qcPipe.nf -with-conda -resume
 ```
 
 ## 2.4 First-Run Behavior
@@ -165,7 +165,7 @@ params.out_dir = 'results/'
 Users may override these parameters at runtime:
 
 ```bash
-nextflow run qcpipe.nf -with-conda \
+nextflow run qcPipe.nf -with-conda \
   --fastq_dir <data_path> \
   --out_dir   <results_folder>
 
