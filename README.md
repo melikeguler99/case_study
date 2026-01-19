@@ -56,6 +56,8 @@ Input files must be placed in the directory specified by the parameter:
 params.fastq_dir (default: data/)
 ```
 
+Note: The `--fastq_dir` argument must point to a directory containing FASTQ files (e.g. `.fastq` or `.fastq.gz`).
+
 By default, the pipeline searches for:
 ```bash
 data/*.{fastq,fastq.gz}
